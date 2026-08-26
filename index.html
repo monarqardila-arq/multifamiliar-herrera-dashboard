@@ -107,7 +107,7 @@
   .plano-img-stage{ position:relative; width:100%; line-height:0; border-radius:8px; overflow:hidden; }
   .plano-img-stage img{ width:100%; height:auto; display:block; }
   #plano-overlay{ position:absolute; inset:0; pointer-events:none; }
-  .est-banda{ position:absolute; left:0; width:100%; transition:opacity .3s ease, box-shadow .3s ease; border-radius:2px; }
+  .est-banda{ position:absolute; transition:opacity .3s ease, box-shadow .3s ease; border-radius:2px; }
   .est-banda .tag{ position:absolute; top:6px; left:8px; font-size:11px; font-weight:700; padding:2px 8px; border-radius:10px; color:#fff; }
   .vanos-lista{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
   .vano-chip{ font-size:11.5px; padding:6px 12px; border-radius:14px; cursor:pointer; border:1px solid var(--borde); background:var(--panel-2); color:var(--texto-tenue); transition:all .15s ease; }
@@ -312,10 +312,15 @@ function pisoTipico(img, bandas){
     ]
   };
 }
-/* Bandas verticales aproximadas (top%, height%) por aparta-estudio, estimadas visualmente sobre la imagen real */
-PISOS_PLANO.P3 = pisoTipico('imgplants/P3.jpg?v=2', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
-PISOS_PLANO.P4 = pisoTipico('imgplants/P4.jpg?v=2', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
-PISOS_PLANO.P5 = pisoTipico('imgplants/P5.jpg?v=2', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
+/* Regiones por aparta-estudio: cada estudio es una UNIÓN de rectángulos (forma en L), en % de ancho/alto de la imagen. Calibrado contra el plano real de P3. */
+const BANDAS_TIPICO = {
+  e1:[ {left:0,  top:0,  w:46, h:45}, {left:46, top:0,  w:54, h:33} ],
+  e2:[ {left:46, top:33, w:54, h:23} ],
+  e3:[ {left:46, top:56, w:54, h:39}, {left:0,  top:94, w:100,h:6} ]
+};
+PISOS_PLANO.P3 = pisoTipico('imgplants/P3.jpg?v=2', BANDAS_TIPICO);
+PISOS_PLANO.P4 = pisoTipico('imgplants/P4.jpg?v=2', BANDAS_TIPICO);
+PISOS_PLANO.P5 = pisoTipico('imgplants/P5.jpg?v=2', BANDAS_TIPICO);
 
 const PLANOS_STATS = {
   P1:[{v:'128.0 m²',l:'Área cubierta'},{v:'24 / 335 m²',l:'Muros mampostería'},{v:'11',l:'Puertas'},{v:'2',l:'Ventanales'}],
@@ -361,28 +366,33 @@ function renderEstudioSelector(){
     el.onclick = ()=>{ estudioActivo = el.dataset.e; renderPlano(); renderEstudioSelector(); };
   });
 }
-const EST_COLOR = { e1:'#378ADD', e2:'#EF9F27', e3:'#63A522' };
+const EST_COLOR = { e1:'#e0524a', e2:'#e0a83a', e3:'#3c7fc9' };
 function renderOverlay(){
   const d = PISOS_PLANO[pisoActivo];
   const cont = document.getElementById('plano-overlay');
   cont.innerHTML = '';
   if(!d.tieneEstudios) return;
   Object.keys(d.bandas).forEach(k=>{
-    const b = d.bandas[k];
-    const div = document.createElement('div');
-    div.className = 'est-banda';
-    div.style.top = b.top+'%';
-    div.style.height = b.h+'%';
     const activo = estudioActivo==='all' || estudioActivo===k;
-    div.style.background = activo ? EST_COLOR[k]+'33' : 'transparent';
-    div.style.boxShadow = activo ? 'inset 0 0 0 2px '+EST_COLOR[k] : 'none';
-    div.style.opacity = (estudioActivo!=='all' && !activo) ? '0' : '1';
-    const tag = document.createElement('div');
-    tag.className = 'tag';
-    tag.style.background = EST_COLOR[k];
-    tag.textContent = 'Estudio '+k.slice(1);
-    if(activo) div.appendChild(tag);
-    cont.appendChild(div);
+    d.bandas[k].forEach((r,i)=>{
+      const div = document.createElement('div');
+      div.className = 'est-banda';
+      div.style.left = r.left+'%';
+      div.style.top = r.top+'%';
+      div.style.width = r.w+'%';
+      div.style.height = r.h+'%';
+      div.style.background = activo ? EST_COLOR[k]+'33' : 'transparent';
+      div.style.boxShadow = activo ? 'inset 0 0 0 2px '+EST_COLOR[k] : 'none';
+      div.style.opacity = (estudioActivo!=='all' && !activo) ? '0' : '1';
+      if(activo && i===0){
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+        tag.style.background = EST_COLOR[k];
+        tag.textContent = 'Estudio '+k.slice(1);
+        div.appendChild(tag);
+      }
+      cont.appendChild(div);
+    });
   });
 }
 function renderVanosLista(){
