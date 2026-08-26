@@ -314,9 +314,9 @@ function pisoTipico(img, bandas){
 }
 /* Regiones por aparta-estudio: cada estudio es una UNIÓN de rectángulos (forma en L), en % de ancho/alto de la imagen. Calibrado contra el plano real de P3. */
 const BANDAS_TIPICO = {
-  e1:[ {left:0,  top:0,  w:46, h:45}, {left:46, top:0,  w:54, h:33} ],
-  e2:[ {left:46, top:33, w:54, h:23} ],
-  e3:[ {left:46, top:56, w:54, h:39}, {left:0,  top:94, w:100,h:6} ]
+  e1:[ {left:0,  top:0,  w:46, h:42}, {left:46, top:0,  w:54, h:34} ],
+  e2:[ {left:46, top:34, w:54, h:24} ],
+  e3:[ {left:46, top:58, w:54, h:42}, {left:0,  top:94, w:100,h:6} ]
 };
 PISOS_PLANO.P3 = pisoTipico('imgplants/P3.jpg?v=2', BANDAS_TIPICO);
 PISOS_PLANO.P4 = pisoTipico('imgplants/P4.jpg?v=2', BANDAS_TIPICO);
