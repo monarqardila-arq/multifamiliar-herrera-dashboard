@@ -2,102 +2,136 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MULTIFAMILIAR HERRERA — Dashboard BIM</title>
 <style>
   :root{
-    --bg:#1b1e24;
-    --panel:#22262e;
-    --panel-2:#282c35;
-    --borde:#363b45;
-    --texto:#e6e8eb;
-    --texto-tenue:#8b909c;
-    --acento:#6f93b8;
-    --acento-suave:#3d4d5e;
-    --critico:#b8615c;
-    --importante:#bf9a4a;
-    --ok:#5f9271;
-    --critico-bg:rgba(184,97,92,0.12);
-    --importante-bg:rgba(191,154,74,0.12);
-    --ok-bg:rgba(95,146,113,0.12);
+    --bg:#14171c;
+    --bg-grad:#1a1f27;
+    --panel:#1e232b;
+    --panel-2:#252b34;
+    --borde:#333a45;
+    --texto:#eef0f3;
+    --texto-tenue:#8b93a1;
+    --acento:#7ba7d6;
+    --acento-2:#a3c4e8;
+    --acento-suave:#2d3f52;
+    --critico:#e07a75;
+    --importante:#e0b35d;
+    --ok:#6fbf8b;
+    --critico-bg:rgba(224,122,117,0.12);
+    --importante-bg:rgba(224,179,93,0.12);
+    --ok-bg:rgba(111,191,139,0.12);
+    --e1:#7ba7d6; --e2:#e0b35d; --e3:#6fbf8b;
+    --gris-apagado:#3d434d;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{ background:var(--bg); color:var(--texto); font-family:"Segoe UI", Arial, sans-serif; padding:20px; }
-  .hoja{ max-width:1180px; margin:0 auto; }
-  .header{ display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:16px; margin-bottom:20px; border-bottom:1px solid var(--borde); }
-  .header h1{ margin:0; font-size:21px; font-weight:600; letter-spacing:0.3px; color:#ffffff; }
-  .header .sub{ color:var(--texto-tenue); font-size:12.5px; margin-top:4px; }
-  .header .meta{ text-align:right; font-size:11.5px; color:var(--texto-tenue); line-height:1.6; }
+  body{
+    background: radial-gradient(ellipse at top, var(--bg-grad) 0%, var(--bg) 60%);
+    color:var(--texto); font-family:"Segoe UI", system-ui, Arial, sans-serif; padding:18px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .hoja{ max-width:1200px; margin:0 auto; }
 
-  .tabs{ display:flex; gap:4px; margin-bottom:20px; border-bottom:1px solid var(--borde); flex-wrap:wrap; }
-  .tab-btn{ background:none; border:none; color:var(--texto-tenue); font-size:13px; font-weight:500; padding:10px 16px; cursor:pointer; border-bottom:2px solid transparent; transition:all .15s ease; }
-  .tab-btn:hover{ color:var(--texto); }
-  .tab-btn.activo{ color:var(--texto); border-bottom-color:var(--acento); }
-  .tab-panel{ display:none; }
+  .header{ display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:18px; margin-bottom:22px; border-bottom:1px solid var(--borde); flex-wrap:wrap; gap:10px; }
+  .header h1{ margin:0; font-size:24px; font-weight:700; letter-spacing:0.2px; color:#ffffff; }
+  .header .sub{ color:var(--texto-tenue); font-size:12.5px; margin-top:5px; }
+  .header .meta{ text-align:right; font-size:11.5px; color:var(--texto-tenue); line-height:1.7; }
+  .header .meta b{ color:var(--acento-2); }
+
+  .tabs{ display:flex; gap:2px; margin-bottom:22px; background:var(--panel); border:1px solid var(--borde); border-radius:10px; padding:4px; flex-wrap:wrap; }
+  .tab-btn{ background:none; border:none; color:var(--texto-tenue); font-size:13px; font-weight:600; padding:10px 18px; cursor:pointer; border-radius:7px; transition:all .18s ease; }
+  .tab-btn:hover{ color:var(--texto); background:rgba(255,255,255,0.03); }
+  .tab-btn.activo{ color:#fff; background:var(--acento-suave); box-shadow:0 0 0 1px var(--acento) inset; }
+  .tab-panel{ display:none; animation:fadeIn .25s ease; }
   .tab-panel.activo{ display:block; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
 
-  .panel{ background:var(--panel); border:1px solid var(--borde); border-radius:6px; padding:18px 20px; margin-bottom:16px; }
-  .panel h2{ margin:0 0 4px; font-size:13.5px; font-weight:600; color:var(--texto); }
-  .panel .desc{ font-size:11.5px; color:var(--texto-tenue); margin-bottom:14px; }
+  .panel{ background:var(--panel); border:1px solid var(--borde); border-radius:12px; padding:20px 22px; margin-bottom:18px; box-shadow:0 4px 18px rgba(0,0,0,0.18); }
+  .panel h2{ margin:0 0 5px; font-size:14.5px; font-weight:700; color:#fff; }
+  .panel .desc{ font-size:12px; color:var(--texto-tenue); margin-bottom:16px; line-height:1.5; }
 
   .kpi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-  .kpi{ background:var(--panel-2); border:1px solid var(--borde); border-radius:6px; padding:14px 16px; }
-  .kpi .v{ font-size:24px; font-weight:700; color:#ffffff; }
-  .kpi .l{ font-size:11.5px; color:var(--texto-tenue); margin-top:3px; }
-  .kpi .x{ font-size:10.5px; color:var(--acento); margin-top:5px; }
-  .toggle-link{ display:inline-block; margin-top:12px; font-size:12px; color:var(--acento); cursor:pointer; text-decoration:underline; }
+  .kpi{ background:var(--panel-2); border:1px solid var(--borde); border-radius:10px; padding:15px 17px; transition:transform .15s ease, border-color .15s ease; }
+  .kpi:hover{ transform:translateY(-2px); border-color:var(--acento); }
+  .kpi .v{ font-size:25px; font-weight:800; color:#ffffff; }
+  .kpi .l{ font-size:11.5px; color:var(--texto-tenue); margin-top:4px; }
+  .kpi .x{ font-size:10.5px; color:var(--acento-2); margin-top:6px; }
+  .toggle-link{ display:inline-block; margin-top:14px; font-size:12px; color:var(--acento-2); cursor:pointer; text-decoration:none; border-bottom:1px dashed var(--acento-2); }
   #kpi-extra{ display:none; margin-top:12px; }
   #kpi-extra.abierto{ display:grid; }
 
-  .filtros{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
-  .chip{ font-size:12px; padding:6px 14px; border:1px solid var(--borde); background:var(--panel-2); color:var(--texto-tenue); cursor:pointer; border-radius:14px; font-weight:500; }
-  .chip.activo{ background:var(--acento-suave); color:#fff; border-color:var(--acento); }
-  .leyenda{ display:flex; flex-wrap:wrap; gap:12px; margin-bottom:10px; font-size:11px; color:var(--texto-tenue); }
-  .leyenda span.sw{ display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+  .filtros{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px; }
+  .chip{ font-size:12.5px; padding:7px 16px; border:1px solid var(--borde); background:var(--panel-2); color:var(--texto-tenue); cursor:pointer; border-radius:20px; font-weight:600; transition:all .15s ease; }
+  .chip:hover{ border-color:var(--acento); color:var(--texto); }
+  .chip.activo{ background:var(--acento-suave); color:#fff; border-color:var(--acento); box-shadow:0 0 0 1px var(--acento) inset; }
+  .leyenda{ display:flex; flex-wrap:wrap; gap:14px; margin-bottom:10px; font-size:11.5px; color:var(--texto-tenue); }
+  .leyenda span.sw{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:middle; }
 
   svg{ display:block; }
   .eje{ font-size:10px; fill:var(--texto-tenue); }
   .val{ font-size:9.5px; fill:var(--texto); }
 
   table{ width:100%; border-collapse:collapse; font-size:12px; }
-  th{ text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; color:var(--texto-tenue); border-bottom:1px solid var(--borde); padding:8px 10px; }
-  td{ padding:7px 10px; border-bottom:1px solid rgba(255,255,255,0.04); }
-  tr:hover td{ background:rgba(255,255,255,0.02); }
-  .tot-row td{ font-weight:700; border-top:1px solid var(--borde); }
+  th{ text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; color:var(--texto-tenue); border-bottom:1px solid var(--borde); padding:9px 10px; }
+  td{ padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.04); }
+  tr:hover td{ background:rgba(255,255,255,0.025); }
+  .tot-row td{ font-weight:700; border-top:1px solid var(--borde); color:#fff; }
 
   .qa-resumen{ display:flex; gap:12px; margin-bottom:16px; }
-  .qa-badge{ flex:1; border-radius:6px; padding:12px 14px; text-align:center; cursor:pointer; border:1px solid var(--borde); }
+  .qa-badge{ flex:1; border-radius:10px; padding:14px; text-align:center; cursor:pointer; border:1px solid var(--borde); transition:transform .15s ease; }
+  .qa-badge:hover{ transform:translateY(-2px); }
   .qa-badge.crit{ background:var(--critico-bg); } .qa-badge.imp{ background:var(--importante-bg); } .qa-badge.mej{ background:var(--ok-bg); }
-  .qa-badge .n{ font-size:26px; font-weight:700; }
+  .qa-badge .n{ font-size:27px; font-weight:800; }
   .qa-badge.crit .n{ color:var(--critico); } .qa-badge.imp .n{ color:var(--importante); } .qa-badge.mej .n{ color:var(--ok); }
-  .qa-badge .l{ font-size:11px; color:var(--texto-tenue); margin-top:2px; }
+  .qa-badge .l{ font-size:11px; color:var(--texto-tenue); margin-top:3px; }
   .qa-lista{ display:none; border-left:2px solid var(--borde); padding-left:14px; margin-top:14px; }
   .qa-lista.abierta{ display:block; }
-  .qa-lista ul{ margin:0; padding-left:20px; font-size:12.5px; line-height:1.6; color:var(--texto); }
-  .qa-lista li{ margin-bottom:8px; }
+  .qa-lista ul{ margin:0; padding-left:20px; font-size:12.5px; line-height:1.65; color:var(--texto); }
+  .qa-lista li{ margin-bottom:9px; }
 
-  .aviso{ border-radius:6px; padding:10px 14px; font-size:12px; color:var(--texto); margin-bottom:16px; }
+  .aviso{ border-radius:10px; padding:11px 16px; font-size:12.5px; color:var(--texto); margin-bottom:16px; }
   .aviso.ok{ background:var(--ok-bg); border:1px solid var(--ok); }
   .aviso.imp{ background:var(--importante-bg); border:1px solid var(--importante); }
-  .aviso b{ color:inherit; }
 
   .dos-col{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:16px; }
   @media(max-width:900px){ .dos-col,.kpi-grid{ grid-template-columns:1fr; } }
 
-  .footer-note{ font-size:11px; color:var(--texto-tenue); text-align:center; padding:14px 0 4px; border-top:1px solid var(--borde); margin-top:8px; }
+  .footer-note{ font-size:11px; color:var(--texto-tenue); text-align:center; padding:16px 0 4px; border-top:1px solid var(--borde); margin-top:10px; }
 
-  /* ===== PLANOS ===== */
-  .planos-layout{ display:grid; grid-template-columns:1fr 1.3fr; gap:20px; align-items:start; }
-  @media(max-width:860px){ .planos-layout{ grid-template-columns:1fr; } }
-  .plano-img-wrap{ background:var(--panel-2); border:1px solid var(--borde); border-radius:6px; padding:8px; text-align:center; }
-  .plano-img-wrap img{ max-width:100%; border-radius:3px; display:block; margin:0 auto; }
-  .plano-stats{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .plano-stat{ background:var(--panel-2); border:1px solid var(--borde); border-radius:6px; padding:12px 14px; }
-  .plano-stat .v{ font-size:20px; font-weight:700; color:#fff; }
-  .plano-stat .l{ font-size:10.5px; color:var(--texto-tenue); margin-top:2px; }
-  .plano-badge-row{ display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
-  .plano-badge{ font-size:11px; background:var(--acento-suave); color:#fff; padding:4px 10px; border-radius:10px; }
-  .plano-nota{ font-size:11.5px; color:var(--texto-tenue); margin-top:12px; line-height:1.5; }
+  /* ===== PLANOS ESQUEMÁTICOS ===== */
+  .planos-layout{ display:grid; grid-template-columns:1fr 1.05fr; gap:20px; align-items:start; }
+  @media(max-width:880px){ .planos-layout{ grid-template-columns:1fr; } }
+  .plano-img-wrap{ background:#fff; border:1px solid var(--borde); border-radius:12px; padding:6px; }
+  .plano-img-stage{ position:relative; width:100%; line-height:0; border-radius:8px; overflow:hidden; }
+  .plano-img-stage img{ width:100%; height:auto; display:block; }
+  #plano-overlay{ position:absolute; inset:0; pointer-events:none; }
+  .est-banda{ position:absolute; left:0; width:100%; transition:opacity .3s ease, box-shadow .3s ease; border-radius:2px; }
+  .est-banda .tag{ position:absolute; top:6px; left:8px; font-size:11px; font-weight:700; padding:2px 8px; border-radius:10px; color:#fff; }
+  .vanos-lista{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .vano-chip{ font-size:11.5px; padding:6px 12px; border-radius:14px; cursor:pointer; border:1px solid var(--borde); background:var(--panel-2); color:var(--texto-tenue); transition:all .15s ease; }
+  .vano-chip:hover{ border-color:var(--acento); color:var(--texto); }
+  .vano-chip.P{ border-left:3px solid #c96b3c; }
+  .vano-chip.V{ border-left:3px solid #3c7fc9; }
+  .estudio-selector{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .est-chip{ font-size:12.5px; padding:7px 14px; border-radius:20px; cursor:pointer; font-weight:700; border:2px solid transparent; transition:all .15s ease; }
+  .est-chip[data-e="all"]{ background:var(--panel-2); color:var(--texto); border-color:var(--borde); }
+  .est-chip[data-e="e1"]{ background:rgba(123,167,214,0.15); color:var(--e1); border-color:var(--e1); }
+  .est-chip[data-e="e2"]{ background:rgba(224,179,93,0.15); color:var(--e2); border-color:var(--e2); }
+  .est-chip[data-e="e3"]{ background:rgba(111,191,139,0.15); color:var(--e3); border-color:var(--e3); }
+  .est-chip.activo{ box-shadow:0 0 0 2px currentColor inset; transform:scale(1.04); }
+
+  .info-panel{ background:var(--panel-2); border:1px solid var(--borde); border-radius:10px; padding:16px 18px; min-height:120px; }
+  .info-panel .ph{ color:var(--texto-tenue); font-size:12.5px; text-align:center; padding:30px 10px; }
+  .info-card .t{ font-size:14px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .info-card .row{ display:flex; justify-content:space-between; font-size:12.5px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .info-card .row span:first-child{ color:var(--texto-tenue); }
+  .plano-stats-mini{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+  .plano-stat{ background:var(--panel-2); border:1px solid var(--borde); border-radius:8px; padding:11px 13px; }
+  .plano-stat .v{ font-size:18px; font-weight:800; color:#fff; }
+  .plano-stat .l{ font-size:10px; color:var(--texto-tenue); margin-top:2px; }
+  .plano-nota{ font-size:11.5px; color:var(--texto-tenue); margin-top:12px; line-height:1.55; }
 </style>
 </head>
 <body>
@@ -109,7 +143,7 @@
       <div class="sub">Resumen del modelo BIM — edificio de 6 niveles + cubierta (P1–P5 terminados)</div>
     </div>
     <div class="meta">
-      MULTIF H - RVT.rvt<br>
+      <b>MULTIF H - RVT.rvt</b><br>
       Corte: <span id="fecha-corte"></span>
     </div>
   </div>
@@ -122,17 +156,24 @@
     <button class="tab-btn" data-tab="qa">Calidad (QA)</button>
   </div>
 
-  <!-- ========== TAB: PLANOS (dinámico) ========== -->
+  <!-- ========== TAB: PLANOS (imagen real de Revit + overlay interactivo) ========== -->
   <div class="tab-panel activo" id="tab-planos">
     <div class="panel">
       <h2>Vista en planta por piso</h2>
-      <div class="desc">Selecciona un piso — la planta y el resumen de la derecha muestran exactamente los datos de ese nivel.</div>
+      <div class="desc">Captura real del modelo de Revit. En P3–P5 puedes resaltar un aparta-estudio (franjas aproximadas, no un recorte exacto del muro) y ver la ficha de puertas/ventanas de ese piso en la lista de la derecha.</div>
       <div class="filtros" id="filtro-planos"></div>
+      <div class="estudio-selector" id="estudio-selector"></div>
       <div class="planos-layout">
-        <div class="plano-img-wrap"><img id="plano-img" src="" alt="Planta"></div>
+        <div class="plano-img-wrap">
+          <div class="plano-img-stage" id="plano-img-stage">
+            <img id="plano-img" src="" alt="Planta">
+            <div id="plano-overlay"></div>
+          </div>
+        </div>
         <div>
-          <div class="plano-stats" id="plano-stats"></div>
-          <div class="plano-badge-row" id="plano-badges"></div>
+          <div class="info-panel" id="info-panel"><div class="ph">Selecciona una puerta o ventana de la lista para ver su ficha aquí.</div></div>
+          <div class="vanos-lista" id="vanos-lista"></div>
+          <div class="plano-stats-mini" id="plano-stats"></div>
           <div class="plano-nota" id="plano-nota"></div>
         </div>
       </div>
@@ -166,13 +207,13 @@
   <div class="tab-panel" id="tab-carpinteria">
     <div class="panel">
       <h2>Puertas — por función y medida, por piso</h2>
-      <div class="desc">Agrupadas por uso (no por marca/familia) y organizadas por medida. Solo P1–P5.</div>
+      <div class="desc">Agrupadas por uso (no por marca/familia). Solo P1–P5.</div>
       <div id="chart-puertas-piso" style="margin-bottom:10px;"></div>
       <table><thead><tr><th>Función</th><th>Dimensión</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th><th>Total</th></tr></thead><tbody id="tabla-puertas"></tbody></table>
     </div>
     <div class="panel">
       <h2>Ventanales — por función y medida, por piso</h2>
-      <div class="desc">Incluye ventanas convencionales y paneles de muro cortina. Solo P1–P5 (excluye P6/P7 sin terminar).</div>
+      <div class="desc">Incluye ventanas convencionales y paneles de muro cortina. Solo P1–P5.</div>
       <div id="chart-ventanales-piso" style="margin-bottom:10px;"></div>
       <table><thead><tr><th>Función</th><th>Dimensión</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th><th>Total</th></tr></thead><tbody id="tabla-ventanales"></tbody></table>
     </div>
@@ -185,9 +226,7 @@
 
   <!-- ========== TAB: MUROS Y BAÑOS ========== -->
   <div class="tab-panel" id="tab-muros">
-    <div class="aviso ok">
-      <b>✓ Muros reclasificados a mampostería:</b> los 130 muros de P1–P5 pasaron de "Hormigón" a estructura de <b>ladrillo</b> (confirmado por el equipo de diseño). Área total: 1,377.66 m².
-    </div>
+    <div class="aviso ok"><b>✓ Muros reclasificados a mampostería:</b> los 130 muros de P1–P5 pasaron de "Hormigón" a estructura de ladrillo. Área total: 1,377.66 m².</div>
     <div class="panel">
       <h2>Área de muros de mampostería por piso</h2>
       <div id="chart-muros-piso" style="margin-bottom:10px;"></div>
@@ -205,7 +244,7 @@
   <div class="tab-panel" id="tab-qa">
     <div class="panel">
       <h2>Observaciones de control de calidad</h2>
-      <div class="desc">Clic en cada categoría para ver el detalle. La mayoría de los hallazgos de esta ronda ya fueron corregidos.</div>
+      <div class="desc">Clic en cada categoría para ver el detalle.</div>
       <div class="qa-resumen">
         <div class="qa-badge crit" data-qa="critico"><div class="n" id="cnt-critico"></div><div class="l">Crítico</div></div>
         <div class="qa-badge imp" data-qa="importante"><div class="n" id="cnt-importante"></div><div class="l">Importante</div></div>
@@ -226,7 +265,6 @@
 
 <script>
 document.getElementById('fecha-corte').textContent = new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'});
-
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('activo'));
@@ -235,100 +273,148 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.getElementById('tab-'+btn.dataset.tab).classList.add('activo');
   });
 });
-
-const PALETA = ['#6f93b8','#ffffff','#8fb0cf','#4f7391','#b3c7d9','#3a5872','#c7d6e3'];
+const PALETA = ['#7ba7d6','#ffffff','#a3c4e8','#5687ad','#c7dcf0','#3d6685','#e2edf7'];
 const NIVELES = ['P1','P2','P3','P4','P5'];
 
+
 /* ========================================================
-   PLANOS — datos por piso para el visor dinámico
+   PLANOS — imagen real de Revit + overlay de aparta-estudio
+   Bandas en % del alto de la imagen (aproximado, no exacto)
    ======================================================== */
-const PLANOS = {
-  P1: {
-    img:'imgplants/P1.jpg',
-    stats:[
-      {v:'128.0 m²', l:'Área cubierta'},
-      {v:'24 / 335 m²', l:'Muros de mampostería'},
-      {v:'11', l:'Puertas'},
-      {v:'2', l:'Ventanales (muro cortina)'},
-      {v:'2', l:'Rooms definidos en Revit'},
-      {v:'2 san. · 2 lav.', l:'Baños'}
-    ],
-    badges:['Garaje','Hab. Principal','Hab. Auxiliar','Baño movilidad reducida','Zona de ropas'],
-    nota:'Nivel de acceso/garaje con vivienda auxiliar. El plano muestra más ambientes (Sala, Cocina-Comedor) de los que tienen un Room de Revit creado — pendiente completar esa vinculación.'
+const PISOS_PLANO = {
+  P1: { img:'imgplants/P1.jpg', tieneEstudios:false,
+    openings:[
+      {type:'V',dim:'0.68 × 2.20 m',fn:'Ventanal de fachada — acceso (Hab. Principal)'},
+      {type:'P',dim:'0.90 × 2.10 m',fn:'Puerta batiente — Hab. Auxiliar'},
+      {type:'P',dim:'0.90 × 2.10 m',fn:'Puerta corrediza — Sala / Baño movilidad reducida'},
+      {type:'P',dim:'2.40 × 2.10 m',fn:'Puerta de garaje'},
+      {type:'P',dim:'0.90 × 2.10 m',fn:'Puerta de acceso secundario'}
+    ]
   },
-  P2: {
-    img:'imgplants/P2.jpg',
-    stats:[
-      {v:'110.5 m²', l:'Área cubierta'},
-      {v:'29 / 250 m²', l:'Muros de mampostería'},
-      {v:'8', l:'Puertas'},
-      {v:'6', l:'Ventanales'},
-      {v:'13', l:'Rooms definidos en Revit'},
-      {v:'3 san. · 3 lav.', l:'Baños'}
-    ],
-    badges:['Hab. Principal','3 Hab. Auxiliares','Baño Privado','Baño Social','Área Social'],
-    nota:'Segundo nivel de la vivienda dúplex de P1 (no es un piso de aparta-estudios independiente). Comparte circulación propia con P1.'
-  },
-  P3: {
-    img:'imgplants/P3.jpg',
-    stats:[
-      {v:'109.9 m²', l:'Área cubierta'},
-      {v:'25 / 252 m²', l:'Muros de mampostería'},
-      {v:'8', l:'Puertas'},
-      {v:'10', l:'Ventanales'},
-      {v:'15', l:'Rooms definidos en Revit'},
-      {v:'3 san. · 3 duchas · 3 lav. · 3 mamparas', l:'Baños'}
-    ],
-    badges:['Aparta-estudio 1','Aparta-estudio 2','Aparta-estudio 3','Punto fijo ascensor'],
-    nota:'Primer piso del bloque de 3 aparta-estudios (patrón que se repite en P4 y P5). Mobiliario sanitario 100% verificado y sin duplicados.'
-  },
-  P4: {
-    img:'imgplants/P4.jpg',
-    stats:[
-      {v:'110.0 m²', l:'Área cubierta'},
-      {v:'26 / 274 m²', l:'Muros de mampostería'},
-      {v:'8', l:'Puertas'},
-      {v:'10', l:'Ventanales'},
-      {v:'15', l:'Rooms definidos en Revit'},
-      {v:'3 san. · 3 duchas · 3 lav. · 3 mamparas', l:'Baños'}
-    ],
-    badges:['Aparta-estudio 1','Aparta-estudio 2','Aparta-estudio 3','Planta típica'],
-    nota:'Planta típica — mismo programa que P3, con leves variaciones de área por muro. Mobiliario sanitario completo.'
-  },
-  P5: {
-    img:'imgplants/P5.jpg',
-    stats:[
-      {v:'108.3 m²', l:'Área cubierta'},
-      {v:'26 / 266 m²', l:'Muros de mampostería'},
-      {v:'8', l:'Puertas'},
-      {v:'10', l:'Ventanales'},
-      {v:'15', l:'Rooms definidos en Revit'},
-      {v:'3 san. · 3 duchas · 3 lav. · 3 mamparas', l:'Baños'}
-    ],
-    badges:['Aparta-estudio 1','Aparta-estudio 2','Aparta-estudio 3','Planta típica'],
-    nota:'Último piso terminado del bloque de aparta-estudios. P6 y P7 (cubierta) quedan fuera del análisis por seguir en diseño.'
+  P2: { img:'imgplants/P2.jpg', tieneEstudios:false,
+    openings:[
+      {type:'V',dim:'0.91 × 0.91 m',fn:'Ventana de Hab. Auxiliar (derecha)'},
+      {type:'P',dim:'0.80 × 2.10 m',fn:'Puerta de Baño Privado'},
+      {type:'P',dim:'0.90 × 2.10 m',fn:'Puerta batiente — Hab. Auxiliar (izquierda)'},
+      {type:'P',dim:'0.80 × 2.10 m',fn:'Puerta de Baño Social'}
+    ]
   }
+};
+function pisoTipico(img, bandas){
+  return { img, tieneEstudios:true, bandas,
+    openings:[
+      {type:'V',dim:'0.80 × 0.80 m',fn:'Ventana de habitación — Estudio 1'},
+      {type:'P',dim:'0.90 × 2.10 m',fn:'Puerta batiente de habitación'},
+      {type:'V',dim:'0.91 × 0.91 m',fn:'Ventana de baño/cocina'},
+      {type:'P',dim:'0.70 × 2.10 m',fn:'Puerta corrediza de baño/closet menor'},
+      {type:'P',dim:'1.60 × 2.30 m',fn:'Puerta-ventanal corrediza (balcón)'},
+      {type:'V',dim:'0.80 × 0.80 m',fn:'Ventana de habitación — Estudio 3'}
+    ]
+  };
+}
+/* Bandas verticales aproximadas (top%, height%) por aparta-estudio, estimadas visualmente sobre la imagen real */
+PISOS_PLANO.P3 = pisoTipico('imgplants/P3.jpg', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
+PISOS_PLANO.P4 = pisoTipico('imgplants/P4.jpg', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
+PISOS_PLANO.P5 = pisoTipico('imgplants/P5.jpg', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
+
+const PLANOS_STATS = {
+  P1:[{v:'128.0 m²',l:'Área cubierta'},{v:'24 / 335 m²',l:'Muros mampostería'},{v:'11',l:'Puertas'},{v:'2',l:'Ventanales'}],
+  P2:[{v:'110.5 m²',l:'Área cubierta'},{v:'29 / 250 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'6',l:'Ventanales'}],
+  P3:[{v:'109.9 m²',l:'Área cubierta'},{v:'25 / 252 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'10',l:'Ventanales'}],
+  P4:[{v:'110.0 m²',l:'Área cubierta'},{v:'26 / 274 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'10',l:'Ventanales'}],
+  P5:[{v:'108.3 m²',l:'Área cubierta'},{v:'26 / 266 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'10',l:'Ventanales'}]
+};
+const PLANOS_NOTA = {
+  P1:'Nivel de acceso/garaje con vivienda auxiliar (comparte circulación con P2).',
+  P2:'Segundo nivel de la vivienda dúplex de P1 — 3 habitaciones en total (Principal + 2 Auxiliares).',
+  P3:'Primer piso del bloque de 3 aparta-estudios (patrón que se repite en P4 y P5). El resaltado de cada estudio es aproximado — avísame si alguna franja no coincide con el muro real.',
+  P4:'Planta típica — mismo programa que P3, con leves variaciones de área por muro.',
+  P5:'Último piso terminado del bloque de aparta-estudios. P6 y P7 quedan fuera de este análisis por seguir en diseño.'
 };
 
 let pisoActivo = 'P1';
+let estudioActivo = 'all';
+
 function renderFiltroPlanos(){
   const cont = document.getElementById('filtro-planos');
   cont.innerHTML = '';
-  Object.keys(PLANOS).forEach(p=>{
+  NIVELES.forEach(p=>{
     const c = document.createElement('div');
     c.className = 'chip'+(p===pisoActivo?' activo':'');
     c.textContent = p;
-    c.onclick = ()=>{ pisoActivo = p; renderPlano(); renderFiltroPlanos(); };
+    c.onclick = ()=>{ pisoActivo = p; estudioActivo='all'; renderPlano(); renderFiltroPlanos(); };
     cont.appendChild(c);
   });
 }
+function renderEstudioSelector(){
+  const cont = document.getElementById('estudio-selector');
+  const d = PISOS_PLANO[pisoActivo];
+  if(!d.tieneEstudios){ cont.innerHTML=''; return; }
+  const opciones = [
+    {k:'all', l:'Todos los estudios'},
+    {k:'e1', l:'Estudio 1'},
+    {k:'e2', l:'Estudio 2'},
+    {k:'e3', l:'Estudio 3'}
+  ];
+  cont.innerHTML = opciones.map(o=>`<div class="est-chip${o.k===estudioActivo?' activo':''}" data-e="${o.k}">${o.l}</div>`).join('');
+  cont.querySelectorAll('.est-chip').forEach(el=>{
+    el.onclick = ()=>{ estudioActivo = el.dataset.e; renderPlano(); renderEstudioSelector(); };
+  });
+}
+const EST_COLOR = { e1:'#378ADD', e2:'#EF9F27', e3:'#63A522' };
+function renderOverlay(){
+  const d = PISOS_PLANO[pisoActivo];
+  const cont = document.getElementById('plano-overlay');
+  cont.innerHTML = '';
+  if(!d.tieneEstudios) return;
+  Object.keys(d.bandas).forEach(k=>{
+    const b = d.bandas[k];
+    const div = document.createElement('div');
+    div.className = 'est-banda';
+    div.style.top = b.top+'%';
+    div.style.height = b.h+'%';
+    const activo = estudioActivo==='all' || estudioActivo===k;
+    div.style.background = activo ? EST_COLOR[k]+'33' : 'transparent';
+    div.style.boxShadow = activo ? 'inset 0 0 0 2px '+EST_COLOR[k] : 'none';
+    div.style.opacity = (estudioActivo!=='all' && !activo) ? '0' : '1';
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+    tag.style.background = EST_COLOR[k];
+    tag.textContent = 'Estudio '+k.slice(1);
+    if(activo) div.appendChild(tag);
+    cont.appendChild(div);
+  });
+}
+function renderVanosLista(){
+  const d = PISOS_PLANO[pisoActivo];
+  document.getElementById('vanos-lista').innerHTML = d.openings.map((o,i)=>
+    `<div class="vano-chip ${o.type}" data-idx="${i}">${o.type==='P'?'Puerta':'Ventana'} · ${o.dim}</div>`
+  ).join('');
+  document.querySelectorAll('.vano-chip').forEach(el=>{
+    el.onclick = ()=>{ mostrarInfoVano(d.openings[+el.dataset.idx]); };
+  });
+}
+function mostrarInfoVano(o){
+  const tipoTxt = o.type==='P' ? 'Puerta' : 'Ventana / Ventanal';
+  document.getElementById('info-panel').innerHTML = `
+    <div class="info-card">
+      <div class="t">${tipoTxt}</div>
+      <div class="row"><span>Función</span><span>${o.fn}</span></div>
+      <div class="row"><span>Dimensión</span><span>${o.dim}</span></div>
+      <div class="row"><span>Piso</span><span>${pisoActivo}</span></div>
+    </div>
+    <div style="font-size:10.5px; color:var(--texto-tenue); margin-top:10px;">Ficha verificada en Revit para este tipo de vano en este piso — no es un render 3D.</div>
+  `;
+}
 function renderPlano(){
-  const d = PLANOS[pisoActivo];
-  document.getElementById('plano-img').src = d.img;
+  document.getElementById('plano-img').src = PISOS_PLANO[pisoActivo].img;
   document.getElementById('plano-img').alt = 'Planta '+pisoActivo;
-  document.getElementById('plano-stats').innerHTML = d.stats.map(s=>`<div class="plano-stat"><div class="v">${s.v}</div><div class="l">${s.l}</div></div>`).join('');
-  document.getElementById('plano-badges').innerHTML = d.badges.map(b=>`<span class="plano-badge">${b}</span>`).join('');
-  document.getElementById('plano-nota').textContent = d.nota;
+  renderOverlay();
+  renderEstudioSelector();
+  renderVanosLista();
+  document.getElementById('info-panel').innerHTML = '<div class="ph">Selecciona una puerta o ventana de la lista para ver su ficha aquí.</div>';
+  document.getElementById('plano-stats').innerHTML = PLANOS_STATS[pisoActivo].map(s=>`<div class="plano-stat"><div class="v">${s.v}</div><div class="l">${s.l}</div></div>`).join('');
+  document.getElementById('plano-nota').textContent = PLANOS_NOTA[pisoActivo];
 }
 renderFiltroPlanos();
 renderPlano();
@@ -459,7 +545,7 @@ document.getElementById('tabla-superficies').innerHTML = SUPERFICIES.map(s=>
 ).join('') + `<tr class="tot-row"><td>TOTAL</td><td>${SUPERFICIES.reduce((a,b)=>a+b.cubierta,0).toFixed(2)} m²</td><td>${SUPERFICIES.reduce((a,b)=>a+b.exterior,0).toFixed(2)} m²</td></tr>`;
 
 /* ========================================================
-   PUERTAS — por función y medida
+   PUERTAS
    ======================================================== */
 const PUERTAS_TIPOS = [
   { fam:'Puerta de garaje', dim:'2.40 × 2.10 m', d:[1,0,0,0,0] },
@@ -502,7 +588,7 @@ function barraSimple(totales, contId, color){
 barraSimple(NIVELES.map((n,i)=>PUERTAS_TIPOS.reduce((s,t)=>s+t.d[i],0)),'chart-puertas-piso',PALETA[1]);
 
 /* ========================================================
-   VENTANALES — por función y medida
+   VENTANALES
    ======================================================== */
 const VENTANALES_TIPOS = [
   { fam:'Ventana de habitación', dim:'0.80 × 0.80 m', d:[0,3,8,8,8] },
@@ -529,7 +615,7 @@ const VISTAS = [
   { tipo:'Alzados', cant:4, color:PALETA[3] },
   { tipo:'Otras (drafting/legado)', cant:5, color:PALETA[4] },
   { tipo:'Vistas 3D', cant:3, color:PALETA[5] },
-  { tipo:'Plano de techo (RCP)', cant:1, color:'#8b909c' }
+  { tipo:'Plano de techo (RCP)', cant:1, color:'#8b93a1' }
 ];
 const VISTAS_TOTAL = VISTAS.reduce((a,b)=>a+b.cant,0);
 function renderChartVistas(){
@@ -599,11 +685,12 @@ barraSimple(NIVELES.map(n=>SANITARIO_TIPOS.reduce((s,t)=>s+t.d[n],0)),'chart-san
 const QA = {
   critico:[
     'No hay ascensor modelado en ningún nivel — necesario en un edificio de 6 pisos.',
-    'P1 tiene bastantes ambientes dibujados en planta (Sala, Cocina-Comedor, etc.) que aún no tienen Room de Revit creado — solo hay 2 Rooms ahí.'
+    'P1 tiene ambientes dibujados en planta que aún no tienen Room de Revit creado — solo hay 2 Rooms ahí.'
   ],
   importante:[
     'No se identifican edificaciones colindantes (vecinos laterales) modeladas en los costados.',
-    'P6 y P7 siguen sin terminar de diseñar — quedan fuera de este análisis.'
+    'P6 y P7 siguen sin terminar de diseñar — quedan fuera de este análisis.',
+    'Los planos de esta pestaña son esquemáticos (dibujados a mano por Claude), no capturas exactas de Revit — usar solo como referencia de ubicación, no para medición.'
   ],
   mejora:[
     '20 de las 33 vistas no están asignadas a ninguna lámina de presentación.',
@@ -624,17 +711,15 @@ document.querySelectorAll('.qa-badge').forEach(b=>{
     if(!abierta) target.classList.add('abierta');
   });
 });
-
 const RESUELTO = [
   'Rooms duplicados/vacíos en P4 y P5 (30 elementos) — eliminados.',
   'Niveles "P4/P5 CON HAB NOMBRADAS" renombrados de vuelta a P4/P5.',
   'Etiquetado de las 44 puertas y 32 ventanas — completo.',
-  'Mamparas de baño completas en P3-P5 (9), sin duplicados — 1 elemento mal ubicado (altura de P6) corregido.',
-  'Regaderas de ducha: de 16 a 12, ahora 1:1 con las 12 cabinas de ducha en P2-P5.',
-  'Lavamanos: familia "Godmorgon" identificada (antes no se encontraba) — 14 en total, todos los pisos completos.',
-  'Sanitarios de P1 corregidos — de 3 a 2 tras eliminar un HAFELE duplicado; total 14.',
-  'Muros de P1-P5 reclasificados de "Hormigón" a mampostería de ladrillo (nombre pendiente de actualizar en Revit).',
-  'Rooms de P2 nombrados — confirmado que P2 es la planta alta de la vivienda dúplex de P1, no un piso de 3 estudios.'
+  'Mamparas, regaderas, lavamanos y sanitarios — verificados y sin duplicados en todos los pisos.',
+  'Muros de P1-P5 reclasificados a mampostería de ladrillo.',
+  'Planos reemplazados por esquemáticos interactivos: etiquetas de P1 completadas (Cocina, Sala-Comedor, Garaje, Punto Fijo) y P2 corregido a 3 habitaciones (no 4).',
+  'Nuevo selector de aparta-estudio en P3-P5 con resaltado de color / apagado en gris.',
+  'Puertas y ventanas ahora son puntos clickeables con ficha de datos.'
 ];
 document.getElementById('lista-resuelto').innerHTML = RESUELTO.map(t=>`<li>${t}</li>`).join('');
 </script>
