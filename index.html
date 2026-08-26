@@ -28,18 +28,18 @@
   .header h1{ margin:0; font-size:21px; font-weight:600; letter-spacing:0.3px; color:#ffffff; }
   .header .sub{ color:var(--texto-tenue); font-size:12.5px; margin-top:4px; }
   .header .meta{ text-align:right; font-size:11.5px; color:var(--texto-tenue); line-height:1.6; }
-
+ 
   .tabs{ display:flex; gap:4px; margin-bottom:20px; border-bottom:1px solid var(--borde); flex-wrap:wrap; }
   .tab-btn{ background:none; border:none; color:var(--texto-tenue); font-size:13px; font-weight:500; padding:10px 16px; cursor:pointer; border-bottom:2px solid transparent; transition:all .15s ease; }
   .tab-btn:hover{ color:var(--texto); }
   .tab-btn.activo{ color:var(--texto); border-bottom-color:var(--acento); }
   .tab-panel{ display:none; }
   .tab-panel.activo{ display:block; }
-
+ 
   .panel{ background:var(--panel); border:1px solid var(--borde); border-radius:6px; padding:18px 20px; margin-bottom:16px; }
   .panel h2{ margin:0 0 4px; font-size:13.5px; font-weight:600; color:var(--texto); }
   .panel .desc{ font-size:11.5px; color:var(--texto-tenue); margin-bottom:14px; }
-
+ 
   .kpi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
   .kpi{ background:var(--panel-2); border:1px solid var(--borde); border-radius:6px; padding:14px 16px; }
   .kpi .v{ font-size:24px; font-weight:700; color:#ffffff; }
@@ -48,23 +48,23 @@
   .toggle-link{ display:inline-block; margin-top:12px; font-size:12px; color:var(--acento); cursor:pointer; text-decoration:underline; }
   #kpi-extra{ display:none; margin-top:12px; }
   #kpi-extra.abierto{ display:grid; }
-
+ 
   .filtros{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
   .chip{ font-size:12px; padding:6px 14px; border:1px solid var(--borde); background:var(--panel-2); color:var(--texto-tenue); cursor:pointer; border-radius:14px; font-weight:500; }
   .chip.activo{ background:var(--acento-suave); color:#fff; border-color:var(--acento); }
   .leyenda{ display:flex; flex-wrap:wrap; gap:12px; margin-bottom:10px; font-size:11px; color:var(--texto-tenue); }
   .leyenda span.sw{ display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
-
+ 
   svg{ display:block; }
   .eje{ font-size:10px; fill:var(--texto-tenue); }
   .val{ font-size:9.5px; fill:var(--texto); }
-
+ 
   table{ width:100%; border-collapse:collapse; font-size:12px; }
   th{ text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; color:var(--texto-tenue); border-bottom:1px solid var(--borde); padding:8px 10px; }
   td{ padding:7px 10px; border-bottom:1px solid rgba(255,255,255,0.04); }
   tr:hover td{ background:rgba(255,255,255,0.02); }
   .tot-row td{ font-weight:700; border-top:1px solid var(--borde); }
-
+ 
   .qa-resumen{ display:flex; gap:12px; margin-bottom:16px; }
   .qa-badge{ flex:1; border-radius:6px; padding:12px 14px; text-align:center; cursor:pointer; border:1px solid var(--borde); }
   .qa-badge.crit{ background:var(--critico-bg); } .qa-badge.imp{ background:var(--importante-bg); } .qa-badge.mej{ background:var(--ok-bg); }
@@ -75,17 +75,17 @@
   .qa-lista.abierta{ display:block; }
   .qa-lista ul{ margin:0; padding-left:20px; font-size:12.5px; line-height:1.6; color:var(--texto); }
   .qa-lista li{ margin-bottom:8px; }
-
+ 
   .aviso{ border-radius:6px; padding:10px 14px; font-size:12px; color:var(--texto); margin-bottom:16px; }
   .aviso.ok{ background:var(--ok-bg); border:1px solid var(--ok); }
   .aviso.imp{ background:var(--importante-bg); border:1px solid var(--importante); }
   .aviso b{ color:inherit; }
-
+ 
   .dos-col{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:16px; }
   @media(max-width:900px){ .dos-col,.kpi-grid{ grid-template-columns:1fr; } }
-
+ 
   .footer-note{ font-size:11px; color:var(--texto-tenue); text-align:center; padding:14px 0 4px; border-top:1px solid var(--borde); margin-top:8px; }
-
+ 
   /* ===== PLANOS ===== */
   .planos-layout{ display:grid; grid-template-columns:1fr 1.3fr; gap:20px; align-items:start; }
   @media(max-width:860px){ .planos-layout{ grid-template-columns:1fr; } }
@@ -102,7 +102,7 @@
 </head>
 <body>
 <div class="hoja">
-
+ 
   <div class="header">
     <div>
       <h1>Multifamiliar Herrera</h1>
@@ -113,7 +113,7 @@
       Corte: <span id="fecha-corte"></span>
     </div>
   </div>
-
+ 
   <div class="tabs">
     <button class="tab-btn activo" data-tab="planos">Planos por piso</button>
     <button class="tab-btn" data-tab="resumen">Resumen</button>
@@ -121,7 +121,7 @@
     <button class="tab-btn" data-tab="muros">Muros y baños</button>
     <button class="tab-btn" data-tab="qa">Calidad (QA)</button>
   </div>
-
+ 
   <!-- ========== TAB: PLANOS (dinámico) ========== -->
   <div class="tab-panel activo" id="tab-planos">
     <div class="panel">
@@ -138,7 +138,7 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- ========== TAB: RESUMEN ========== -->
   <div class="tab-panel" id="tab-resumen">
     <div class="panel">
@@ -161,7 +161,7 @@
       <table style="margin-top:10px;"><thead><tr><th>Nivel</th><th>Área cubierta</th><th>Área exterior</th></tr></thead><tbody id="tabla-superficies"></tbody></table>
     </div>
   </div>
-
+ 
   <!-- ========== TAB: CARPINTERÍA ========== -->
   <div class="tab-panel" id="tab-carpinteria">
     <div class="panel">
@@ -182,7 +182,7 @@
       <table><thead><tr><th>Tipo de vista</th><th>Cant.</th><th>%</th></tr></thead><tbody id="tabla-vistas"></tbody></table>
     </div>
   </div>
-
+ 
   <!-- ========== TAB: MUROS Y BAÑOS ========== -->
   <div class="tab-panel" id="tab-muros">
     <div class="aviso ok">
@@ -200,7 +200,7 @@
       <table><thead><tr><th>Función</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th><th>Total</th></tr></thead><tbody id="tabla-sanitario"></tbody></table>
     </div>
   </div>
-
+ 
   <!-- ========== TAB: QA ========== -->
   <div class="tab-panel" id="tab-qa">
     <div class="panel">
@@ -220,13 +220,13 @@
       <ul style="font-size:12.5px; line-height:1.7; color:var(--texto-tenue); margin:0; padding-left:20px;" id="lista-resuelto"></ul>
     </div>
   </div>
-
+ 
   <div class="footer-note">Dashboard generado a partir de consulta directa al modelo activo en Revit — el presupuesto se documenta aparte.</div>
 </div>
-
+ 
 <script>
 document.getElementById('fecha-corte').textContent = new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'});
-
+ 
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('activo'));
@@ -235,16 +235,16 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.getElementById('tab-'+btn.dataset.tab).classList.add('activo');
   });
 });
-
+ 
 const PALETA = ['#6f93b8','#ffffff','#8fb0cf','#4f7391','#b3c7d9','#3a5872','#c7d6e3'];
 const NIVELES = ['P1','P2','P3','P4','P5'];
-
+ 
 /* ========================================================
    PLANOS — datos por piso para el visor dinámico
    ======================================================== */
 const PLANOS = {
   P1: {
-    img:'plans/P1.jpg',
+    img:'imgplants/P1.jpg',
     stats:[
       {v:'128.0 m²', l:'Área cubierta'},
       {v:'24 / 335 m²', l:'Muros de mampostería'},
@@ -257,7 +257,7 @@ const PLANOS = {
     nota:'Nivel de acceso/garaje con vivienda auxiliar. El plano muestra más ambientes (Sala, Cocina-Comedor) de los que tienen un Room de Revit creado — pendiente completar esa vinculación.'
   },
   P2: {
-    img:'plans/P2.jpg',
+    img:'imgplants/P2.jpg',
     stats:[
       {v:'110.5 m²', l:'Área cubierta'},
       {v:'29 / 250 m²', l:'Muros de mampostería'},
@@ -270,7 +270,7 @@ const PLANOS = {
     nota:'Segundo nivel de la vivienda dúplex de P1 (no es un piso de aparta-estudios independiente). Comparte circulación propia con P1.'
   },
   P3: {
-    img:'plans/P3.jpg',
+    img:'imgplants/P3.jpg',
     stats:[
       {v:'109.9 m²', l:'Área cubierta'},
       {v:'25 / 252 m²', l:'Muros de mampostería'},
@@ -283,7 +283,7 @@ const PLANOS = {
     nota:'Primer piso del bloque de 3 aparta-estudios (patrón que se repite en P4 y P5). Mobiliario sanitario 100% verificado y sin duplicados.'
   },
   P4: {
-    img:'plans/P4.jpg',
+    img:'imgplants/P4.jpg',
     stats:[
       {v:'110.0 m²', l:'Área cubierta'},
       {v:'26 / 274 m²', l:'Muros de mampostería'},
@@ -296,7 +296,7 @@ const PLANOS = {
     nota:'Planta típica — mismo programa que P3, con leves variaciones de área por muro. Mobiliario sanitario completo.'
   },
   P5: {
-    img:'plans/P5.jpg',
+    img:'imgplants/P5.jpg',
     stats:[
       {v:'108.3 m²', l:'Área cubierta'},
       {v:'26 / 266 m²', l:'Muros de mampostería'},
@@ -309,7 +309,7 @@ const PLANOS = {
     nota:'Último piso terminado del bloque de aparta-estudios. P6 y P7 (cubierta) quedan fuera del análisis por seguir en diseño.'
   }
 };
-
+ 
 let pisoActivo = 'P1';
 function renderFiltroPlanos(){
   const cont = document.getElementById('filtro-planos');
@@ -332,7 +332,7 @@ function renderPlano(){
 }
 renderFiltroPlanos();
 renderPlano();
-
+ 
 /* ========================================================
    KPIs
    ======================================================== */
@@ -363,7 +363,7 @@ toggleKpi.onclick = ()=>{
   ext.classList.toggle('abierto');
   toggleKpi.textContent = ext.classList.contains('abierto') ? 'Ocultar indicadores ▴' : 'Ver 6 indicadores más ▾';
 };
-
+ 
 /* ========================================================
    CATEGORÍAS x NIVELES
    ======================================================== */
@@ -421,7 +421,7 @@ function renderChartCategorias(){
 }
 function renderTodo(){ renderFiltrosNivel(); renderLeyenda(); renderChartCategorias(); }
 renderTodo();
-
+ 
 /* ========================================================
    PROGRAMA DE SUPERFICIES
    ======================================================== */
@@ -457,7 +457,7 @@ barraApilada(SUPERFICIES,'chart-superficies','cubierta','exterior',PALETA[0],PAL
 document.getElementById('tabla-superficies').innerHTML = SUPERFICIES.map(s=>
   `<tr><td>${s.nivel}</td><td>${s.cubierta.toFixed(2)} m²</td><td>${s.exterior>0?s.exterior.toFixed(2)+' m²':'—'}</td></tr>`
 ).join('') + `<tr class="tot-row"><td>TOTAL</td><td>${SUPERFICIES.reduce((a,b)=>a+b.cubierta,0).toFixed(2)} m²</td><td>${SUPERFICIES.reduce((a,b)=>a+b.exterior,0).toFixed(2)} m²</td></tr>`;
-
+ 
 /* ========================================================
    PUERTAS — por función y medida
    ======================================================== */
@@ -500,7 +500,7 @@ function barraSimple(totales, contId, color){
   document.getElementById(contId).innerHTML = svg;
 }
 barraSimple(NIVELES.map((n,i)=>PUERTAS_TIPOS.reduce((s,t)=>s+t.d[i],0)),'chart-puertas-piso',PALETA[1]);
-
+ 
 /* ========================================================
    VENTANALES — por función y medida
    ======================================================== */
@@ -518,7 +518,7 @@ document.getElementById('tabla-ventanales').innerHTML = VENTANALES_TIPOS.map(t=>
   return `<tr class="tot-row"><td>TOTAL</td><td></td>${tot.map(v=>`<td>${v}</td>`).join('')}<td>${tot.reduce((a,b)=>a+b,0)}</td></tr>`;
 })();
 barraSimple(NIVELES.map((n,i)=>VENTANALES_TIPOS.reduce((s,t)=>s+t.d[i],0)),'chart-ventanales-piso',PALETA[2]);
-
+ 
 /* ========================================================
    VISTAS
    ======================================================== */
@@ -560,7 +560,7 @@ function renderChartVistas(){
   `).join('');
 }
 renderChartVistas();
-
+ 
 /* ========================================================
    MUROS
    ======================================================== */
@@ -572,7 +572,7 @@ document.getElementById('tabla-muros').innerHTML = MUROS_POR_PISO.map(m=>
   `<tr><td>${m.nivel}</td><td>${m.cant}</td><td>${m.area.toFixed(2)} m²</td></tr>`
 ).join('') + `<tr class="tot-row"><td>TOTAL</td><td>${MUROS_POR_PISO.reduce((a,b)=>a+b.cant,0)}</td><td>${MUROS_POR_PISO.reduce((a,b)=>a+b.area,0).toFixed(2)} m²</td></tr>`;
 barraSimple(MUROS_POR_PISO.map(m=>Math.round(m.area)),'chart-muros-piso',PALETA[0]);
-
+ 
 /* ========================================================
    MOBILIARIO SANITARIO
    ======================================================== */
@@ -592,7 +592,7 @@ document.getElementById('tabla-sanitario').innerHTML = SANITARIO_TIPOS.map(t=>{
   return `<tr class="tot-row"><td>TOTAL</td>${tot.map(v=>`<td>${v}</td>`).join('')}<td>${tot.reduce((a,b)=>a+b,0)}</td></tr>`;
 })();
 barraSimple(NIVELES.map(n=>SANITARIO_TIPOS.reduce((s,t)=>s+t.d[n],0)),'chart-sanitario-piso',PALETA[4]);
-
+ 
 /* ========================================================
    QA
    ======================================================== */
@@ -624,7 +624,7 @@ document.querySelectorAll('.qa-badge').forEach(b=>{
     if(!abierta) target.classList.add('abierta');
   });
 });
-
+ 
 const RESUELTO = [
   'Rooms duplicados/vacíos en P4 y P5 (30 elementos) — eliminados.',
   'Niveles "P4/P5 CON HAB NOMBRADAS" renombrados de vuelta a P4/P5.',
@@ -640,3 +640,4 @@ document.getElementById('lista-resuelto').innerHTML = RESUELTO.map(t=>`<li>${t}<
 </script>
 </body>
 </html>
+ 
