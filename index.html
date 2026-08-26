@@ -282,7 +282,7 @@ const NIVELES = ['P1','P2','P3','P4','P5'];
    Bandas en % del alto de la imagen (aproximado, no exacto)
    ======================================================== */
 const PISOS_PLANO = {
-  P1: { img:'imgplants/P1.jpg', tieneEstudios:false,
+  P1: { img:'imgplants/P1.jpg?v=2', tieneEstudios:false,
     openings:[
       {type:'V',dim:'0.68 × 2.20 m',fn:'Ventanal de fachada — acceso (Hab. Principal)'},
       {type:'P',dim:'0.90 × 2.10 m',fn:'Puerta batiente — Hab. Auxiliar'},
@@ -291,7 +291,7 @@ const PISOS_PLANO = {
       {type:'P',dim:'0.90 × 2.10 m',fn:'Puerta de acceso secundario'}
     ]
   },
-  P2: { img:'imgplants/P2.jpg', tieneEstudios:false,
+  P2: { img:'imgplants/P2.jpg?v=2', tieneEstudios:false,
     openings:[
       {type:'V',dim:'0.91 × 0.91 m',fn:'Ventana de Hab. Auxiliar (derecha)'},
       {type:'P',dim:'0.80 × 2.10 m',fn:'Puerta de Baño Privado'},
@@ -313,9 +313,9 @@ function pisoTipico(img, bandas){
   };
 }
 /* Bandas verticales aproximadas (top%, height%) por aparta-estudio, estimadas visualmente sobre la imagen real */
-PISOS_PLANO.P3 = pisoTipico('imgplants/P3.jpg', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
-PISOS_PLANO.P4 = pisoTipico('imgplants/P4.jpg', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
-PISOS_PLANO.P5 = pisoTipico('imgplants/P5.jpg', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
+PISOS_PLANO.P3 = pisoTipico('imgplants/P3.jpg?v=2', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
+PISOS_PLANO.P4 = pisoTipico('imgplants/P4.jpg?v=2', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
+PISOS_PLANO.P5 = pisoTipico('imgplants/P5.jpg?v=2', {e1:{top:9,h:32}, e2:{top:41,h:22}, e3:{top:63,h:35}});
 
 const PLANOS_STATS = {
   P1:[{v:'128.0 m²',l:'Área cubierta'},{v:'24 / 335 m²',l:'Muros mampostería'},{v:'11',l:'Puertas'},{v:'2',l:'Ventanales'}],
