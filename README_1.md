@@ -2,17 +2,17 @@
 
 Dashboard interactivo con el resumen del modelo BIM (Revit) del proyecto **Multifamiliar Herrera**: edificio de 6 niveles + cubierta.
 
-🔗 **Ver el dashboard en vivo:** `https://tu-usuario.github.io/multifamiliar-herrera-dashboard/`
-*(reemplaza con tu URL real una vez publicado en GitHub Pages)*
+🔗 **Ver el dashboard en vivo:** https://monarqardila-arq.github.io/multifamiliar-herrera-dashboard/
 
 ---
 
 ## ¿Qué muestra este dashboard?
 
+- **Planos por piso**: selector interactivo P1–P5 — muestra la planta real de ese nivel junto con un resumen sincronizado (área, muros, puertas, ventanales, ambientes, baños).
 - **Resumen**: indicadores generales del modelo (niveles, área construida, ventanales, muros, aparatos sanitarios, ambientes).
-- **Puertas y ventanas**: inventario completo por tipo, dimensión y piso.
-- **Muros y mobiliario**: área de muros por piso (para presupuesto) y mobiliario sanitario (duchas, sanitarios, lavamanos).
-- **Calidad (QA)**: observaciones críticas, importantes y de mejora detectadas en el modelo.
+- **Carpintería**: puertas y ventanales agrupados por función y medida (no por marca/familia), con desglose por piso.
+- **Muros y baños**: área de muros de mampostería por piso, y mobiliario sanitario completo (sanitarios, duchas, regaderas, lavamanos, mamparas).
+- **Calidad (QA)**: observaciones pendientes, y un listado de todo lo que ya se corrigió en esta revisión.
 
 > ⚠️ Este dashboard **no incluye presupuesto** (costos ni precios unitarios) — solo cantidades y estado del modelo. El presupuesto se maneja como documento aparte.
 
@@ -38,9 +38,12 @@ Los datos están "quemados" en el archivo `index.html` (no se conectan en vivo a
 ## Estructura del repositorio
 
 ```
-├── index.html   → el dashboard completo (HTML + CSS + JS, un solo archivo, sin dependencias externas)
-└── README.md    → este archivo
+├── index.html      → el dashboard completo (HTML + CSS + JS, sin dependencias externas)
+├── imgplants/       → plantas arquitectónicas (P1.jpg – P5.jpg) usadas en la pestaña "Planos por piso"
+└── README.md        → este archivo
 ```
+
+> Si mueves o renombras la carpeta `imgplants`, hay que actualizar las rutas `img:'imgplants/P1.jpg'` etc. dentro del `index.html` (sección `const PLANOS`), o las imágenes dejan de cargar.
 
 ---
 
