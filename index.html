@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>MULTIFAMILIAR HERRERA — Dashboard BIM</title>
+<style>
+  :root{
+    --bg:#1b1e24;
+    --panel:#22262e;
+    --panel-2:#282c35;
+    --borde:#363b45;
+    --texto:#e6e8eb;
+    --texto-tenue:#8b909c;
+    --acento:#6f93b8;
+    --acento-suave:#3d4d5e;
+    --critico:#b8615c;
+    --importante:#bf9a4a;
+    --ok:#5f9271;
+    --critico-bg:rgba(184,97,92,0.12);
+    --importante-bg:rgba(191,154,74,0.12);
+    --ok-bg:rgba(95,146,113,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--texto);
+    font-family:"Segoe UI", Arial, sans-serif;
+    padding:20px;
+  }
+  .hoja{ max-width:1180px; margin:0 auto; }
+
+  /* ===== HEADER ===== */
+  .header{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    padding-bottom:16px; margin-bottom:20px; border-bottom:1px solid var(--borde);
+  }
+  .header h1{ margin:0; font-size:21px; font-weight:600; letter-spacing:0.3px; color:#ffffff; }
+  .header .sub{ color:var(--texto-tenue); font-size:12.5px; margin-top:4px; }
+  .header .meta{ text-align:right; font-size:11.5px; color:var(--texto-tenue); line-height:1.6; }
+
+  /* ===== TABS ===== */
+  .tabs{ display:flex; gap:4px; margin-bottom:20px; border-bottom:1px solid var(--borde); flex-wrap:wrap; }
+  .tab-btn{
+    background:none; border:none; color:var(--texto-tenue);
+    font-size:13px; font-weight:500; padding:10px 16px; cursor:pointer;
+    border-bottom:2px solid transparent; transition:all .15s ease;
+  }
+  .tab-btn:hover{ color:var(--texto); }
+  .tab-btn.activo{ color:var(--texto); border-bottom-color:var(--acento); }
+  .tab-panel{ display:none; }
+  .tab-panel.activo{ display:block; }
+
+  /* ===== TARJETAS / PANEL ===== */
+  .panel{
+    background:var(--panel); border:1px solid var(--borde); border-radius:6px;
+    padding:18px 20px; margin-bottom:16px;
+  }
+  .panel h2{ margin:0 0 4px; font-size:13.5px; font-weight:600; color:var(--texto); }
+  .panel .desc{ font-size:11.5px; color:var(--texto-tenue); margin-bottom:14px; }
+
+  /* ===== KPIs ===== */
+  .kpi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .kpi{
+    background:var(--panel-2); border:1px solid var(--borde); border-radius:6px;
+    padding:14px 16px;
+  }
+  .kpi .v{ font-size:24px; font-weight:700; color:#ffffff; }
+  .kpi .l{ font-size:11.5px; color:var(--texto-tenue); margin-top:3px; }
+  .kpi .x{ font-size:10.5px; color:var(--acento); margin-top:5px; }
+  .toggle-link{
+    display:inline-block; margin-top:12px; font-size:12px; color:var(--acento);
+    cursor:pointer; text-decoration:underline;
+  }
+  #kpi-extra{ display:none; margin-top:12px; }
+  #kpi-extra.abierto{ display:grid; }
+
+  /* ===== FILTROS / LEYENDA ===== */
+  .filtros{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .chip{
+    font-size:11.5px; padding:5px 11px; border:1px solid var(--borde);
+    background:var(--panel-2); color:var(--texto-tenue); cursor:pointer; border-radius:14px;
+  }
+  .chip.activo{ background:var(--acento-suave); color:var(--texto); border-color:var(--acento); }
+  .leyenda{ display:flex; flex-wrap:wrap; gap:12px; margin-bottom:10px; font-size:11px; color:var(--texto-tenue); }
+  .leyenda span.sw{ display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+
+  svg{ display:block; }
+  .eje{ font-size:10px; fill:var(--texto-tenue); }
+  .val{ font-size:9.5px; fill:var(--texto); }
+
+  /* ===== TABLAS ===== */
+  table{ width:100%; border-collapse:collapse; font-size:12px; }
+  th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px;
+    color:var(--texto-tenue); border-bottom:1px solid var(--borde); padding:8px 10px;
+  }
+  td{ padding:7px 10px; border-bottom:1px solid rgba(255,255,255,0.04); }
+  tr:hover td{ background:rgba(255,255,255,0.02); }
+  .tot-row td{ font-weight:700; border-top:1px solid var(--borde); }
+
+  /* ===== QA ===== */
+  .qa-resumen{ display:flex; gap:12px; margin-bottom:16px; }
+  .qa-badge{
+    flex:1; border-radius:6px; padding:12px 14px; text-align:center; cursor:pointer;
+    border:1px solid var(--borde); transition:opacity .15s;
+  }
+  .qa-badge.crit{ background:var(--critico-bg); }
+  .qa-badge.imp{ background:var(--importante-bg); }
+  .qa-badge.mej{ background:var(--ok-bg); }
+  .qa-badge .n{ font-size:26px; font-weight:700; }
+  .qa-badge.crit .n{ color:var(--critico); }
+  .qa-badge.imp .n{ color:var(--importante); }
+  .qa-badge.mej .n{ color:var(--ok); }
+  .qa-badge .l{ font-size:11px; color:var(--texto-tenue); margin-top:2px; }
+  .qa-lista{ display:none; }
+  .qa-lista.abierta{ display:block; }
+  .qa-lista ul{ margin:0; padding-left:20px; font-size:12.5px; line-height:1.6; color:var(--texto); }
+  .qa-lista li{ margin-bottom:8px; }
+  .qa-lista{ border-left:2px solid var(--borde); padding-left:14px; margin-top:14px; }
+
+  .aviso{
+    background:var(--importante-bg); border:1px solid var(--importante); border-radius:6px;
+    padding:10px 14px; font-size:12px; color:var(--texto); margin-bottom:16px;
+  }
+  .aviso b{ color:var(--importante); }
+
+  .dos-col{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:16px; }
+  @media(max-width:900px){ .dos-col,.kpi-grid{ grid-template-columns:1fr; } }
+
+  .footer-note{
+    font-size:11px; color:var(--texto-tenue); text-align:center; padding:14px 0 4px;
+    border-top:1px solid var(--borde); margin-top:8px;
+  }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+  <div class="header">
+    <div>
+      <h1>Multifamiliar Herrera</h1>
+      <div class="sub">Resumen del modelo BIM — edificio de 6 niveles + cubierta</div>
+    </div>
+    <div class="meta">
+      MULTIF H - RVT.rvt<br>
+      Corte: <span id="fecha-corte"></span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn activo" data-tab="resumen">Resumen</button>
+    <button class="tab-btn" data-tab="carpinteria">Puertas y ventanas</button>
+    <button class="tab-btn" data-tab="muros">Muros y mobiliario</button>
+    <button class="tab-btn" data-tab="qa">Calidad (QA)</button>
+  </div>
+
+  <!-- ========== TAB: RESUMEN ========== -->
+  <div class="tab-panel activo" id="tab-resumen">
+
+    <div class="panel">
+      <h2>Indicadores clave</h2>
+      <div class="kpi-grid" id="kpi-grid"></div>
+      <div class="toggle-link" id="toggle-kpi">Ver 6 indicadores más ▾</div>
+      <div class="kpi-grid" id="kpi-extra"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Elementos por nivel</h2>
+      <div class="desc">Distribución de categorías principales entre pisos. Haz clic en un piso para aislarlo.</div>
+      <div class="filtros" id="filtro-niveles"></div>
+      <div class="leyenda" id="leyenda-categorias"></div>
+      <div id="chart-categorias"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Programa de superficies</h2>
+      <div class="desc">Área cubierta por piso, en m².</div>
+      <div id="chart-superficies"></div>
+      <table style="margin-top:10px;">
+        <thead><tr><th>Nivel</th><th>Área cubierta</th><th>Área exterior</th></tr></thead>
+        <tbody id="tabla-superficies"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ========== TAB: PUERTAS Y VENTANAS ========== -->
+  <div class="tab-panel" id="tab-carpinteria">
+
+    <div class="panel">
+      <h2>Puertas por tipo y piso</h2>
+      <div id="chart-puertas-piso" style="margin-bottom:10px;"></div>
+      <table>
+        <thead><tr><th>Familia / Tipo</th><th>Dimensión</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th><th>P6</th><th>P7</th><th>Total</th></tr></thead>
+        <tbody id="tabla-puertas"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Ventanales por tipo y piso</h2>
+      <div class="desc">Incluye ventanas convencionales y paneles de muro cortina.</div>
+      <div id="chart-ventanales-piso" style="margin-bottom:10px;"></div>
+      <table>
+        <thead><tr><th>Categoría / Tipo</th><th>Dimensión</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th><th>P6</th><th>P7</th><th>Total</th></tr></thead>
+        <tbody id="tabla-ventanales"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Inventario de vistas</h2>
+      <div id="chart-vistas" style="margin-bottom:14px;"></div>
+      <table>
+        <thead><tr><th>Tipo de vista</th><th>Cant.</th><th>%</th></tr></thead>
+        <tbody id="tabla-vistas"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ========== TAB: MUROS Y MOBILIARIO ========== -->
+  <div class="tab-panel" id="tab-muros">
+
+    <div class="aviso">
+      <b>Nota para presupuesto de mampostería:</b> los 159 muros del modelo están en tipo "Hormigón" (concreto). No hay tipo "Bloque"/"Mampostería" definido — confirmar reclasificación antes de aplicar precios de mampostería.
+    </div>
+
+    <div class="panel">
+      <h2>Área de muros de concreto por piso</h2>
+      <div id="chart-muros-piso" style="margin-bottom:10px;"></div>
+      <table>
+        <thead><tr><th>Piso</th><th>N° de muros</th><th>Área (m²)</th></tr></thead>
+        <tbody id="tabla-muros"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Mobiliario sanitario por tipo y piso</h2>
+      <div id="chart-sanitario-piso" style="margin-bottom:10px;"></div>
+      <table>
+        <thead><tr><th>Familia / Tipo</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th><th>P6</th><th>P7</th><th>S/P*</th><th>Total</th></tr></thead>
+        <tbody id="tabla-sanitario"></tbody>
+      </table>
+      <div style="font-size:10.5px; color:var(--texto-tenue); margin-top:8px;">
+        *Sin piso: elementos anidados en mobiliario sin nivel de instancia asignado. No se encontraron mamparas de baño como elemento independiente.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========== TAB: QA ========== -->
+  <div class="tab-panel" id="tab-qa">
+    <div class="panel">
+      <h2>Observaciones de control de calidad</h2>
+      <div class="desc">Clic en cada categoría para ver el detalle.</div>
+      <div class="qa-resumen">
+        <div class="qa-badge crit" data-qa="critico"><div class="n" id="cnt-critico"></div><div class="l">Crítico</div></div>
+        <div class="qa-badge imp" data-qa="importante"><div class="n" id="cnt-importante"></div><div class="l">Importante</div></div>
+        <div class="qa-badge mej" data-qa="mejora"><div class="n" id="cnt-mejora"></div><div class="l">Mejora</div></div>
+      </div>
+      <div class="qa-lista" id="qa-critico"><ul id="lista-critico"></ul></div>
+      <div class="qa-lista" id="qa-importante"><ul id="lista-importante"></ul></div>
+      <div class="qa-lista" id="qa-mejora"><ul id="lista-mejora"></ul></div>
+    </div>
+  </div>
+
+  <div class="footer-note">Dashboard generado a partir de consulta directa al modelo activo en Revit — el presupuesto se documenta aparte.</div>
+</div>
+
+<script>
+document.getElementById('fecha-corte').textContent = new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'});
+
+/* ---------- TABS ---------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('activo'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('activo'));
+    btn.classList.add('activo');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('activo');
+  });
+});
+
+/* ---------- PALETA DE GRÁFICOS (monocromática, con variación de opacidad) ---------- */
+const PALETA = ['#6f93b8','#ffffff','#8fb0cf','#4f7391','#b3c7d9','#3a5872','#c7d6e3'];
+
+/* ---------- DATOS ---------- */
+const NIVELES = ['P1','P2','P3','P4','P5','P6','P7'];
+
+const CATEGORIAS = [
+  { nombre:'Muros',                    color:PALETA[0], datos:[41,48,49,48,46,31,0] },
+  { nombre:'Puertas',                  color:PALETA[1], datos:[11,8,8,8,8,1,0] },
+  { nombre:'Ventanas',                 color:PALETA[2], datos:[0,5,9,9,9,0,0] },
+  { nombre:'Mobiliario y carpintería', color:PALETA[3], datos:[14,14,19,9,22,0,0] },
+  { nombre:'Columnas',                 color:PALETA[4], datos:[28,1,0,0,0,0,0] },
+  { nombre:'Pisos',                    color:PALETA[5], datos:[5,1,1,1,1,1,0] }
+];
+const TOTALES_NIVEL = [143,115,122,88,97,100,35];
+
+const KPIS_PRINCIPALES = [
+  { l:'Niveles modelados', v:'7', x:'P1 — P7' },
+  { l:'Área cubierta total', v:'672.8 m²', x:'losas P1—P6' },
+  { l:'Ventanales totales', v:'61', x:'32 convencionales + 29 muro cortina' },
+  { l:'Área de muros', v:'1.744 m²', x:'159 muros, todos en concreto' },
+  { l:'Aparatos sanitarios', v:'35', x:'15 duchas · 15 sanitarios · 5 lavamanos' },
+  { l:'Ambientes (Rooms)', v:'2', x:'de un edificio de 5 niveles habitables' }
+];
+const KPIS_SECUNDARIOS = [
+  { l:'Elementos totales', v:'11.974', x:'todas las categorías' },
+  { l:'Muros', v:'263', x:'6 niveles' },
+  { l:'Puertas', v:'44', x:'10 etiquetadas' },
+  { l:'Ventanas', v:'32', x:'0 etiquetadas' },
+  { l:'Columnas', v:'29', x:'13 arq. + 16 estructurales' },
+  { l:'Vistas / láminas', v:'33 / 5', x:'13 vistas en lámina' }
+];
+
+function pintarKPIs(lista, contId){
+  const cont = document.getElementById(contId);
+  cont.innerHTML = lista.map(k=>`<div class="kpi"><div class="v">${k.v}</div><div class="l">${k.l}</div><div class="x">${k.x}</div></div>`).join('');
+}
+pintarKPIs(KPIS_PRINCIPALES,'kpi-grid');
+pintarKPIs(KPIS_SECUNDARIOS,'kpi-extra');
+
+const toggleKpi = document.getElementById('toggle-kpi');
+toggleKpi.onclick = ()=>{
+  const ext = document.getElementById('kpi-extra');
+  ext.classList.toggle('abierto');
+  toggleKpi.textContent = ext.classList.contains('abierto') ? 'Ocultar indicadores ▴' : 'Ver 6 indicadores más ▾';
+};
+
+/* ---------- 02 CATEGORÍAS x NIVELES ---------- */
+let nivelActivo = null;
+const filtroNivelesEl = document.getElementById('filtro-niveles');
+function renderFiltrosNivel(){
+  filtroNivelesEl.innerHTML='';
+  const chipTodos = document.createElement('div');
+  chipTodos.className = 'chip'+(nivelActivo===null?' activo':'');
+  chipTodos.textContent = 'Todos';
+  chipTodos.onclick = ()=>{ nivelActivo=null; renderTodo(); };
+  filtroNivelesEl.appendChild(chipTodos);
+  NIVELES.forEach((n,i)=>{
+    const c = document.createElement('div');
+    c.className = 'chip'+(nivelActivo===i?' activo':'');
+    c.textContent = n;
+    c.onclick = ()=>{ nivelActivo = (nivelActivo===i)?null:i; renderTodo(); };
+    filtroNivelesEl.appendChild(c);
+  });
+}
+const leyendaEl = document.getElementById('leyenda-categorias');
+function renderLeyenda(){
+  leyendaEl.innerHTML = CATEGORIAS.map(c=>`<span><span class="sw" style="background:${c.color}"></span>${c.nombre}</span>`).join('');
+}
+function renderChartCategorias(){
+  const nivelesVisibles = nivelActivo===null ? NIVELES.map((n,i)=>i) : [nivelActivo];
+  const W=1080,H=260,padL=40,padB=28,padT=10,padR=10;
+  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const grupoW=plotW/nivelesVisibles.length;
+  const maxVal = Math.max(1,...CATEGORIAS.flatMap(c=>nivelesVisibles.map(i=>c.datos[i])));
+  const barW = Math.max(4,(grupoW*0.78)/CATEGORIAS.length);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}">`;
+  for(let s=0;s<=4;s++){
+    const val=Math.round(maxVal*s/4), y=padT+plotH-(val/maxVal)*plotH;
+    svg += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="rgba(255,255,255,0.05)"/>`;
+    svg += `<text x="${padL-8}" y="${y+3}" text-anchor="end" class="eje">${val}</text>`;
+  }
+  nivelesVisibles.forEach((nivIdx,gi)=>{
+    const gx = padL+gi*grupoW+grupoW*0.11;
+    CATEGORIAS.forEach((cat,ci)=>{
+      const val=cat.datos[nivIdx], h=(val/maxVal)*plotH, x=gx+ci*barW, y=padT+plotH-h;
+      svg += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(barW-2).toFixed(1)}" height="${h.toFixed(1)}" fill="${cat.color}"><title>${cat.nombre} · ${NIVELES[nivIdx]} · ${val}</title></rect>`;
+      if(val>0) svg += `<text x="${(x+barW/2-1).toFixed(1)}" y="${(y-4).toFixed(1)}" text-anchor="middle" class="val">${val}</text>`;
+    });
+    svg += `<text x="${(padL+gi*grupoW+grupoW/2).toFixed(1)}" y="${H-10}" text-anchor="middle" class="eje" style="fill:var(--texto);font-weight:600;">${NIVELES[nivIdx]}</text>`;
+  });
+  svg += `<line x1="${padL}" y1="${padT+plotH}" x2="${W-padR}" y2="${padT+plotH}" stroke="var(--borde)"/></svg>`;
+  document.getElementById('chart-categorias').innerHTML = svg;
+}
+function renderTodo(){ renderFiltrosNivel(); renderLeyenda(); renderChartCategorias(); }
+renderTodo();
+
+/* ---------- 03 PROGRAMA DE SUPERFICIES ---------- */
+const SUPERFICIES = [
+  {nivel:'P1',cubierta:128.03,exterior:37.09},{nivel:'P2',cubierta:110.53,exterior:0},
+  {nivel:'P3',cubierta:109.91,exterior:0},{nivel:'P4',cubierta:110.04,exterior:0},
+  {nivel:'P5',cubierta:108.30,exterior:0},{nivel:'P6',cubierta:105.94,exterior:0},{nivel:'P7',cubierta:0,exterior:0}
+];
+function barraApilada(datos, contId, keyA, keyB, colorA, colorB){
+  const W=1080,H=240,padL=36,padB=26,padT=10,padR=10;
+  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const barW=(plotW/datos.length)*0.55;
+  const maxVal=Math.max(1,...datos.map(d=>d[keyA]+d[keyB]));
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}">`;
+  for(let s=0;s<=4;s++){
+    const val=maxVal*s/4, y=padT+plotH-(val/maxVal)*plotH;
+    svg += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="rgba(255,255,255,0.05)"/>`;
+    svg += `<text x="${padL-6}" y="${y+3}" text-anchor="end" class="eje">${val.toFixed(0)}</text>`;
+  }
+  datos.forEach((d,i)=>{
+    const gx=padL+i*(plotW/datos.length)+(plotW/datos.length-barW)/2;
+    const hA=(d[keyA]/maxVal)*plotH, hB=(d[keyB]/maxVal)*plotH;
+    const yA=padT+plotH-hA, yB=yA-hB;
+    svg += `<rect x="${gx.toFixed(1)}" y="${yA.toFixed(1)}" width="${barW.toFixed(1)}" height="${hA.toFixed(1)}" fill="${colorA}"><title>${d.nivel} ${keyA}: ${d[keyA]}</title></rect>`;
+    if(d[keyB]>0) svg += `<rect x="${gx.toFixed(1)}" y="${yB.toFixed(1)}" width="${barW.toFixed(1)}" height="${hB.toFixed(1)}" fill="${colorB}"><title>${d.nivel} ${keyB}: ${d[keyB]}</title></rect>`;
+    const tot=d[keyA]+d[keyB];
+    if(tot>0) svg += `<text x="${(gx+barW/2).toFixed(1)}" y="${(yB-5).toFixed(1)}" text-anchor="middle" class="val">${tot.toFixed(0)}</text>`;
+    svg += `<text x="${(gx+barW/2).toFixed(1)}" y="${H-8}" text-anchor="middle" class="eje" style="fill:var(--texto);font-weight:600;">${d.nivel}</text>`;
+  });
+  svg += `<line x1="${padL}" y1="${padT+plotH}" x2="${W-padR}" y2="${padT+plotH}" stroke="var(--borde)"/></svg>`;
+  document.getElementById(contId).innerHTML = svg;
+}
+barraApilada(SUPERFICIES,'chart-superficies','cubierta','exterior',PALETA[0],PALETA[1]);
+document.getElementById('tabla-superficies').innerHTML = SUPERFICIES.map(s=>
+  `<tr><td>${s.nivel}</td><td>${s.cubierta>0?s.cubierta.toFixed(2)+' m²':'—'}</td><td>${s.exterior>0?s.exterior.toFixed(2)+' m²':'—'}</td></tr>`
+).join('') + `<tr class="tot-row"><td>TOTAL</td><td>${SUPERFICIES.reduce((a,b)=>a+b.cubierta,0).toFixed(2)} m²</td><td>${SUPERFICIES.reduce((a,b)=>a+b.exterior,0).toFixed(2)} m²</td></tr>`;
+
+/* ---------- PUERTAS ---------- */
+const PUERTAS_TIPOS = [
+  { fam:'Aluprof MB-79N-SI (panel)', dim:'0.90 × 2.10 m', d:[1,0,0,0,0,0,0] },
+  { fam:'Puerta-Hueco (enchapada)', dim:'0.915 × 2.134 m', d:[1,0,0,0,0,0,0] },
+  { fam:'M_Door-Garage (garaje)', dim:'2.40 × 2.10 m', d:[1,0,0,0,0,0,0] },
+  { fam:'Puerta de 1 hoja', dim:'0.80 × 2.10 m', d:[0,1,0,0,0,1,0] },
+  { fam:'Corredera Atelier', dim:'0.90 × 2.10 m', d:[3,0,0,0,0,0,0] },
+  { fam:'Corredera Atelier', dim:'0.70 × 2.10 m', d:[0,3,2,2,2,0,0] },
+  { fam:'Abatible interior', dim:'0.90 × 2.10 m', d:[2,0,3,3,3,0,0] },
+  { fam:'Abatible interior', dim:'0.80 × 2.10 m', d:[2,1,0,0,0,0,0] },
+  { fam:'Abatible interior', dim:'0.70 × 2.10 m', d:[0,1,1,1,1,0,0] },
+  { fam:'Abatible interior', dim:'1.00 × 2.10 m', d:[0,1,0,0,0,0,0] },
+  { fam:'Corredera Factory (negro)', dim:'1.20 × 2.10 m', d:[1,0,0,0,0,0,0] },
+  { fam:'Corredera Factory (blanco)', dim:'1.60 × 2.30 m', d:[0,0,1,1,1,0,0] },
+  { fam:'HAFELE Aluflex (plegable)', dim:'≈7.73 m² de hoja', d:[0,1,1,1,1,0,0] }
+];
+function renderTablaSimple(lista, tbodyId){
+  const totalesFila = NIVELES.map((n,i)=> lista.reduce((s,t)=>s+t.d[i],0));
+  document.getElementById(tbodyId).innerHTML = lista.map(t=>{
+    const total=t.d.reduce((a,b)=>a+b,0);
+    return `<tr><td>${t.fam}</td><td>${t.dim}</td>${t.d.map(v=>`<td>${v>0?v:'–'}</td>`).join('')}<td style="font-weight:600;">${total}</td></tr>`;
+  }).join('') + `<tr class="tot-row"><td>TOTAL</td><td></td>${totalesFila.map(v=>`<td>${v}</td>`).join('')}<td>${totalesFila.reduce((a,b)=>a+b,0)}</td></tr>`;
+}
+renderTablaSimple(PUERTAS_TIPOS,'tabla-puertas');
+function barraSimple(totales, contId, color){
+  const W=1080,H=130,padL=32,padB=24,padT=8,padR=10;
+  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const barW=(plotW/NIVELES.length)*0.5;
+  const maxVal=Math.max(1,...totales);
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}">`;
+  NIVELES.forEach((n,i)=>{
+    const val=totales[i], h=(val/maxVal)*plotH;
+    const gx=padL+i*(plotW/NIVELES.length)+(plotW/NIVELES.length-barW)/2, y=padT+plotH-h;
+    svg += `<rect x="${gx.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}" fill="${color}"><title>${n}: ${val}</title></rect>`;
+    if(val>0) svg += `<text x="${(gx+barW/2).toFixed(1)}" y="${(y-4).toFixed(1)}" text-anchor="middle" class="val">${val}</text>`;
+    svg += `<text x="${(gx+barW/2).toFixed(1)}" y="${H-6}" text-anchor="middle" class="eje" style="fill:var(--texto);font-weight:600;">${n}</text>`;
+  });
+  svg += `<line x1="${padL}" y1="${padT+plotH}" x2="${W-padR}" y2="${padT+plotH}" stroke="var(--borde)"/></svg>`;
+  document.getElementById(contId).innerHTML = svg;
+}
+barraSimple(NIVELES.map((n,i)=>PUERTAS_TIPOS.reduce((s,t)=>s+t.d[i],0)),'chart-puertas-piso',PALETA[1]);
+
+/* ---------- VENTANALES ---------- */
+const VENTANALES_TIPOS = [
+  { cat:'Convencional', fam:'Ventana simple', dim:'0.80 × 0.80 m', d:[0,3,8,8,8,0,0] },
+  { cat:'Convencional', fam:'Corredera 2 hojas (negro)', dim:'0.91 × 0.91 m', d:[0,2,0,0,0,0,0] },
+  { cat:'Convencional', fam:'Corredera 2 hojas (blanco)', dim:'0.91 × 0.91 m', d:[0,0,1,1,1,0,0] },
+  { cat:'Muro cortina', fam:'Franja vertical — típica', dim:'0.90 × 2.41 m', d:[0,1,1,1,1,2,0] },
+  { cat:'Muro cortina', fam:'Franja vertical — P1', dim:'0.68 × 2.20 m', d:[2,0,0,0,0,0,0] },
+  { cat:'Muro cortina', fam:'Banda horizontal — P6', dim:'0.81 × 0.71 m', d:[0,0,0,0,0,12,0] },
+  { cat:'Muro cortina', fam:'Banda horizontal — P7', dim:'0.93 × 0.70 m', d:[0,0,0,0,0,0,8] },
+  { cat:'Muro cortina', fam:'Panel de cierre sin dimensión', dim:'—', d:[0,0,0,0,0,0,1] }
+];
+document.getElementById('tabla-ventanales').innerHTML = VENTANALES_TIPOS.map(t=>{
+  const total=t.d.reduce((a,b)=>a+b,0);
+  return `<tr><td><span style="color:var(--texto-tenue);font-size:10.5px;">${t.cat}</span><br>${t.fam}</td><td>${t.dim}</td>${t.d.map(v=>`<td>${v>0?v:'–'}</td>`).join('')}<td style="font-weight:600;">${total}</td></tr>`;
+}).join('') + (()=>{
+  const tot=NIVELES.map((n,i)=>VENTANALES_TIPOS.reduce((s,t)=>s+t.d[i],0));
+  return `<tr class="tot-row"><td>TOTAL</td><td></td>${tot.map(v=>`<td>${v}</td>`).join('')}<td>${tot.reduce((a,b)=>a+b,0)}</td></tr>`;
+})();
+function barraApiladaVentanales(){
+  const conv = NIVELES.map((n,i)=>VENTANALES_TIPOS.filter(t=>t.cat==='Convencional').reduce((s,t)=>s+t.d[i],0));
+  const cort = NIVELES.map((n,i)=>VENTANALES_TIPOS.filter(t=>t.cat==='Muro cortina').reduce((s,t)=>s+t.d[i],0));
+  const datos = NIVELES.map((n,i)=>({nivel:n, conv:conv[i], cort:cort[i]}));
+  barraApilada(datos,'chart-ventanales-piso','conv','cort',PALETA[0],PALETA[4]);
+}
+barraApiladaVentanales();
+
+/* ---------- VISTAS ---------- */
+const VISTAS = [
+  { tipo:'Plantas arquitectónicas', cant:8, color:PALETA[0] },
+  { tipo:'Secciones', cant:7, color:PALETA[1] },
+  { tipo:'Planos de área (alquiler)', cant:5, color:PALETA[2] },
+  { tipo:'Alzados', cant:4, color:PALETA[3] },
+  { tipo:'Otras (drafting/legado)', cant:5, color:PALETA[4] },
+  { tipo:'Vistas 3D', cant:3, color:PALETA[5] },
+  { tipo:'Plano de techo (RCP)', cant:1, color:'#8b909c' }
+];
+const VISTAS_TOTAL = VISTAS.reduce((a,b)=>a+b.cant,0);
+function renderChartVistas(){
+  const size=150,r=58,cx=size/2,cy=size/2,grosor=22;
+  let acumulado=0, parts='';
+  VISTAS.forEach(v=>{
+    const frac=v.cant/VISTAS_TOTAL;
+    const a0=acumulado*2*Math.PI-Math.PI/2, a1=(acumulado+frac)*2*Math.PI-Math.PI/2;
+    const x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0), x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+    const largeArc=frac>0.5?1:0;
+    parts += `<path d="M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${largeArc} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}" fill="none" stroke="${v.color}" stroke-width="${grosor}"><title>${v.tipo}: ${v.cant}</title></path>`;
+    acumulado += frac;
+  });
+  document.getElementById('chart-vistas').innerHTML = `
+    <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
+      <svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">
+        ${parts}
+        <text x="${cx}" y="${cy-2}" text-anchor="middle" font-size="19" fill="var(--texto)" font-weight="700">${VISTAS_TOTAL}</text>
+        <text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="8.5" fill="var(--texto-tenue)">VISTAS</text>
+      </svg>
+      <div style="font-size:11.5px; color:var(--texto-tenue); max-width:280px;">
+        13 de 33 vistas están colocadas en las 5 láminas del set actual.<br>
+        <span style="color:var(--critico)">20 vistas</span> aún no se asignan a ninguna lámina.
+      </div>
+    </div>`;
+  document.getElementById('tabla-vistas').innerHTML = VISTAS.map(v=>`
+    <tr><td><span class="sw" style="background:${v.color}"></span>${v.tipo}</td><td>${v.cant}</td><td>${(v.cant/VISTAS_TOTAL*100).toFixed(0)}%</td></tr>
+  `).join('');
+}
+renderChartVistas();
+
+/* ---------- MUROS ---------- */
+const MUROS_POR_PISO = [
+  {nivel:'P1',cant:24,area:335.45},{nivel:'P2',cant:29,area:250.30},{nivel:'P3',cant:25,area:251.60},
+  {nivel:'P4',cant:26,area:274.05},{nivel:'P5',cant:26,area:266.26},{nivel:'P6',cant:29,area:366.59},{nivel:'P7',cant:0,area:0}
+];
+document.getElementById('tabla-muros').innerHTML = MUROS_POR_PISO.map(m=>
+  `<tr><td>${m.nivel}</td><td>${m.cant>0?m.cant:'–'}</td><td>${m.area>0?m.area.toFixed(2)+' m²':'—'}</td></tr>`
+).join('') + `<tr class="tot-row"><td>TOTAL</td><td>${MUROS_POR_PISO.reduce((a,b)=>a+b.cant,0)}</td><td>${MUROS_POR_PISO.reduce((a,b)=>a+b.area,0).toFixed(2)} m²</td></tr>`;
+barraSimple(MUROS_POR_PISO.map(m=>Math.round(m.area)),'chart-muros-piso',PALETA[0]);
+
+/* ---------- SANITARIOS ---------- */
+const SANITARIO_TIPOS = [
+  { fam:'Regadera "Ducha Loren Slim Round"', d:{P1:0,P2:2,P3:1,P4:0,P5:0,P6:0,P7:0,SP:0} },
+  { fam:'Cabina de ducha "Shower Stall"', d:{P1:0,P2:3,P3:3,P4:3,P5:3,P6:0,P7:0,SP:0} },
+  { fam:'Sanitario HAFELE', d:{P1:2,P2:2,P3:3,P4:3,P5:3,P6:0,P7:0,SP:0} },
+  { fam:'Sanitario "Inodoro Coral"', d:{P1:1,P2:1,P3:0,P4:0,P5:0,P6:0,P7:0,SP:0} },
+  { fam:'Lavamanos "Flutti"', d:{P1:1,P2:0,P3:0,P4:0,P5:0,P6:0,P7:0,SP:0} },
+  { fam:'Lavamanos "Metropolitan"', d:{P1:1,P2:0,P3:0,P4:0,P5:0,P6:0,P7:0,SP:0} },
+  { fam:'Lavamanos "Bajo Encimera"', d:{P1:0,P2:0,P3:0,P4:0,P5:0,P6:0,P7:0,SP:3} },
+  { fam:'Grifería "Flex Plus"', d:{P1:0,P2:0,P3:0,P4:0,P5:0,P6:0,P7:0,SP:3} },
+  { fam:'Fregadero de cocina', d:{P1:0,P2:0,P3:2,P4:0,P5:0,P6:0,P7:0,SP:3} },
+  { fam:'Sumidero sifónico', d:{P1:0,P2:2,P3:0,P4:0,P5:0,P6:0,P7:0,SP:0} }
+];
+const NIVELES_SP = ['P1','P2','P3','P4','P5','P6','P7','SP'];
+document.getElementById('tabla-sanitario').innerHTML = SANITARIO_TIPOS.map(t=>{
+  const total = NIVELES_SP.reduce((s,n)=>s+t.d[n],0);
+  return `<tr><td>${t.fam}</td>${NIVELES_SP.map(n=>`<td>${t.d[n]>0?t.d[n]:'–'}</td>`).join('')}<td style="font-weight:600;">${total}</td></tr>`;
+}).join('') + (()=>{
+  const tot = NIVELES_SP.map(n=>SANITARIO_TIPOS.reduce((s,t)=>s+t.d[n],0));
+  return `<tr class="tot-row"><td>TOTAL</td>${tot.map(v=>`<td>${v}</td>`).join('')}<td>${tot.reduce((a,b)=>a+b,0)}</td></tr>`;
+})();
+barraSimple(NIVELES.map(n=>SANITARIO_TIPOS.reduce((s,t)=>s+t.d[n],0)),'chart-sanitario-piso',PALETA[4]);
+
+/* ---------- QA ---------- */
+const QA = {
+  critico:[
+    'No hay ascensor modelado en ningún nivel — necesario en un edificio de 6 pisos.',
+    'Solo 4 tramos de escalera; verificar continuidad hasta el último nivel terminado.',
+    'Solo 2 de los espacios habitables tienen Room asignado — el resto del programa no está delimitado.',
+    'Ninguna de las 32 ventanas tiene etiqueta (Window Tag) colocada en planta.'
+  ],
+  importante:[
+    '34 de las 44 puertas no tienen etiqueta (Door Tag) colocada en planta.',
+    'No se identifican edificaciones colindantes (vecinos laterales) modeladas.',
+    'Los 159 muros están tipificados como "Hormigón" — no existe tipo de mampostería/bloque.',
+    'No hay mamparas de baño modeladas como elemento independiente.'
+  ],
+  mejora:[
+    '20 de las 33 vistas no están asignadas a ninguna lámina de presentación.',
+    'El proyecto registra 326 materiales — revisar duplicados o sin uso.',
+    'Columnas concentradas en P1 (28 de 29) — confirmar sistema estructural en niveles superiores.'
+  ]
+};
+document.getElementById('cnt-critico').textContent = QA.critico.length;
+document.getElementById('cnt-importante').textContent = QA.importante.length;
+document.getElementById('cnt-mejora').textContent = QA.mejora.length;
+document.getElementById('lista-critico').innerHTML = QA.critico.map(t=>`<li>${t}</li>`).join('');
+document.getElementById('lista-importante').innerHTML = QA.importante.map(t=>`<li>${t}</li>`).join('');
+document.getElementById('lista-mejora').innerHTML = QA.mejora.map(t=>`<li>${t}</li>`).join('');
+
+document.querySelectorAll('.qa-badge').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    const target = document.getElementById('qa-'+b.dataset.qa);
+    const abierta = target.classList.contains('abierta');
+    document.querySelectorAll('.qa-lista').forEach(l=>l.classList.remove('abierta'));
+    if(!abierta) target.classList.add('abierta');
+  });
+});
+</script>
+</body>
+</html>
