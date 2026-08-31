@@ -323,11 +323,11 @@ PISOS_PLANO.P4 = pisoTipico('imgplants/P3_estudios.jpg?v=4', BANDAS_TIPICO);
 PISOS_PLANO.P5 = pisoTipico('imgplants/P3_estudios.jpg?v=4', BANDAS_TIPICO);
 
 const PLANOS_STATS = {
-  P1:[{v:'128.0 m²',l:'Área cubierta'},{v:'24 / 335 m²',l:'Muros mampostería'},{v:'11',l:'Puertas'},{v:'2',l:'Ventanales'}],
-  P2:[{v:'110.5 m²',l:'Área cubierta'},{v:'29 / 250 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'6',l:'Ventanales'}],
-  P3:[{v:'109.9 m²',l:'Área cubierta'},{v:'25 / 252 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'10',l:'Ventanales'}],
-  P4:[{v:'110.0 m²',l:'Área cubierta'},{v:'26 / 274 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'10',l:'Ventanales'}],
-  P5:[{v:'108.3 m²',l:'Área cubierta'},{v:'26 / 266 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'10',l:'Ventanales'}]
+  P1:[{v:'128.0 m²',l:'Área cubierta'},{v:'24 / 339 m²',l:'Muros mampostería'},{v:'11',l:'Puertas'},{v:'2',l:'Ventanales'}],
+  P2:[{v:'110.5 m²',l:'Área cubierta'},{v:'29 / 251 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'6',l:'Ventanales'}],
+  P3:[{v:'109.9 m²',l:'Área cubierta'},{v:'26 / 256 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'10',l:'Ventanales'}],
+  P4:[{v:'110.0 m²',l:'Área cubierta'},{v:'26 / 256 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'10',l:'Ventanales'}],
+  P5:[{v:'108.3 m²',l:'Área cubierta'},{v:'26 / 256 m²',l:'Muros mampostería'},{v:'8',l:'Puertas'},{v:'10',l:'Ventanales'}]
 };
 const PLANOS_NOTA = {
   P1:'Nivel de acceso/garaje con vivienda auxiliar (comparte circulación con P2).',
@@ -443,7 +443,7 @@ const KPIS_PRINCIPALES = [
   { l:'Niveles terminados', v:'5', x:'P1 — P5 (P6/P7 en diseño)' },
   { l:'Área cubierta total', v:'566.7 m²', x:'suma P1—P5' },
   { l:'Ventanales (P1–P5)', v:'38', x:'sin contar P6/P7' },
-  { l:'Muros de mampostería', v:'1,377.7 m²', x:'130 muros, ladrillo' },
+  { l:'Muros de mampostería', v:'1,359.2 m²', x:'131 muros, ladrillo (sin guardaescoba)' },
   { l:'Aparatos sanitarios', v:'61', x:'san., duchas, lavamanos, mamparas' },
   { l:'Rooms definidos', v:'60', x:'P1:2 · P2:13 · P3-P5:15 c/u' }
 ];
@@ -471,7 +471,7 @@ toggleKpi.onclick = ()=>{
    CATEGORÍAS x NIVELES
    ======================================================== */
 const CATEGORIAS = [
-  { nombre:'Muros',       color:PALETA[0], datos:[24,29,25,26,26] },
+  { nombre:'Muros',       color:PALETA[0], datos:[24,29,26,26,26] },
   { nombre:'Puertas',     color:PALETA[1], datos:[11,8,8,8,8] },
   { nombre:'Ventanales',  color:PALETA[2], datos:[2,6,10,10,10] },
   { nombre:'Rooms',       color:PALETA[3], datos:[2,13,15,15,15] },
@@ -668,8 +668,8 @@ renderChartVistas();
    MUROS
    ======================================================== */
 const MUROS_POR_PISO = [
-  {nivel:'P1',cant:24,area:335.45},{nivel:'P2',cant:29,area:250.30},{nivel:'P3',cant:25,area:251.60},
-  {nivel:'P4',cant:26,area:274.05},{nivel:'P5',cant:26,area:266.26}
+  {nivel:'P1',cant:24,area:339.40},{nivel:'P2',cant:29,area:251.10},{nivel:'P3',cant:26,area:256.42},
+  {nivel:'P4',cant:26,area:256.08},{nivel:'P5',cant:26,area:256.15}
 ];
 document.getElementById('tabla-muros').innerHTML = MUROS_POR_PISO.map(m=>
   `<tr><td>${m.nivel}</td><td>${m.cant}</td><td>${m.area.toFixed(2)} m²</td></tr>`
