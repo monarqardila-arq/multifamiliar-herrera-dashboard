@@ -497,10 +497,10 @@ item("2.5", "Concreto columnas 40×40 cm",
 item("2.6", "Acero de refuerzo #4 (1/2\")",
      "Acero corrugado fy = 420 MPa (60.000 psi), NTC 2289. Losa doble parrilla #4 c/0.20; muros #4 c/0.20 en ambos sentidos; "
      "longitudinal de columnas 4 #4 por columna. Figurado según cartilla (hoja Foso ascensor).",
-     "kg", total=f"={FOS}K{FC['k4']}*(1+{SREF['desp_acero']})", src="E/D", obs="Incluye desperdicio.")
+     "ml", total=f"={FOS}I{FC['k4']}*(1+{SREF['desp_acero']})", src="E/D", obs="Metros lineales de barra. Incluye desperdicio.")
 item("2.7", "Acero de refuerzo #3 (3/8\") — flejes",
      "Acero corrugado fy = 420 MPa, NTC 2289. Flejes cerrados #3 @0.075 m, L = 1.50 m, gancho a 135°.",
-     "kg", total=f"={FOS}K{FC['k3']}*(1+{SREF['desp_acero']})", src="E/D", obs="Incluye desperdicio.")
+     "ml", total=f"={FOS}I{FC['k3']}*(1+{SREF['desp_acero']})", src="E/D", obs="Metros lineales de barra. Incluye desperdicio.")
 item("2.8", "Formaleta para muros y columnas del foso",
      "Formaleta metálica o en madera cepillada, con desmoldante. Ambas caras de muros + caras exteriores de columnas.",
      "m²", total=f"={FOS}B{FC['form']}", src="D")
@@ -688,7 +688,7 @@ RES = [
     ("Ventanas y ventanales", f"={DRS}I{DR['vent'][-1]+1}", "un", "32 convencionales + 6 paneles de muro cortina"),
     ("Aparatos sanitarios", f"={DRS}I{DR['s_mamp']+1}", "un", "Incluye mamparas"),
     ("Foso ascensor — concreto estructural (con desperdicio)", f"={FOS}B{FC['tot']}*(1+{SREF['desp_conc']})", "m³", "Losa + muros + columnas"),
-    ("Foso ascensor — acero de refuerzo total (con desperdicio)", f"=({FOS}K{FC['k4']}+{FOS}K{FC['k3']})*(1+{SREF['desp_acero']})", "kg", "#4 + #3"),
+    ("Foso ascensor — acero de refuerzo total (con desperdicio)", f"=({FOS}I{FC['k4']}+{FOS}I{FC['k3']})*(1+{SREF['desp_acero']})", "ml", "#4 + #3, metros lineales"),
     ("Foso ascensor — excavación", f"={FOS}B{FC['exc']}", "m³", ""),
 ]
 rr = 4

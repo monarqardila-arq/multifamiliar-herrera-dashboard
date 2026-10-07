@@ -15,7 +15,6 @@ from openpyxl.utils import get_column_letter
 
 HTML_OUT, XLSX_OUT = sys.argv[1], sys.argv[2]
 
-PESO = {"#3": 0.560, "#4": 0.994}
 DESP_ACERO = 0.05
 DESP_CONC = 0.05
 
@@ -59,11 +58,8 @@ for m, el, bar, sep, dist, nfix, mult, L, forma, tramos, figdef in CARTILLA:
     n = nbarras(sep, dist, nfix)
     tot = n * mult
     lt = tot * L
-    kg = lt * PESO[bar]
     rows.append(dict(m=m, el=el, bar=bar, sep=sep, dist=dist, n=n, mult=mult, tot=tot, L=L,
-                     lt=lt, kg=kg, forma=forma, tramos=tramos, fig=figdef))
-k4 = sum(r["kg"] for r in rows if r["bar"] == "#4")
-k3 = sum(r["kg"] for r in rows if r["bar"] == "#3")
+                     lt=lt, forma=forma, tramos=tramos, fig=figdef))
 l4 = sum(r["lt"] for r in rows if r["bar"] == "#4")
 l3 = sum(r["lt"] for r in rows if r["bar"] == "#3")
 
@@ -125,8 +121,7 @@ cart_rows = "".join(
     f'<td class="figc">{fig(*r["fig"])}</td><td class="c">{r["bar"]}</td>'
     f'<td class="r">{"—" if r["sep"] is None else f"{r["sep"]:.3f}".rstrip("0").rstrip(".")}</td>'
     f'<td class="r">{r["n"]} × {r["mult"]}</td><td class="r b">{r["tot"]}</td>'
-    f'<td class="r">{r["L"]:.2f}<div class="sub">{r["tramos"]}</div></td><td class="r">{n2(r["lt"])}</td>'
-    f'<td class="r">{PESO[r["bar"]]:.3f}</td><td class="r b">{n2(r["kg"])}</td></tr>'
+    f'<td class="r">{r["L"]:.2f}<div class="sub">{r["tramos"]}</div></td><td class="r b">{n2(r["lt"])}</td></tr>'
     for r in rows)
 
 conc_rows = "".join(
@@ -182,9 +177,9 @@ h2.c2 {{ break-before: page; }}
 </div>
 
 <div class="res avoid">
-  <div><b>{n2(k4*(1+DESP_ACERO))} kg</b><span>Acero #4 (1/2"), con 5 % de desperdicio</span></div>
-  <div><b>{n2(k3*(1+DESP_ACERO))} kg</b><span>Acero #3 (3/8"), con 5 % de desperdicio</span></div>
-  <div><b>{n2((k4+k3)*(1+DESP_ACERO))} kg</b><span>Acero total, con desperdicio</span></div>
+  <div><b>{n2(l4*(1+DESP_ACERO))} ml</b><span>Barra #4 (1/2"), con 5 % de desperdicio</span></div>
+  <div><b>{n2(l3*(1+DESP_ACERO))} ml</b><span>Barra #3 (3/8"), con 5 % de desperdicio</span></div>
+  <div><b>{n2((l4+l3)*(1+DESP_ACERO))} ml</b><span>Acero total, con 5 % de desperdicio</span></div>
   <div><b>{n3(vtot*(1+DESP_CONC))} m³</b><span>Concreto 21 MPa, con 5 % de desperdicio</span></div>
 </div>
 
@@ -192,13 +187,11 @@ h2.c2 {{ break-before: page; }}
 <table>
 <colgroup><col style="width:44px"><col class="el"></colgroup>
 <thead><tr><th>Marca</th><th>Elemento / forma</th><th>Figura</th><th>Barra</th><th class="r">Sep. (m)</th>
-<th class="r">N° × elem.</th><th class="r">Cant.</th><th class="r">L corte (m)</th><th class="r">Long. total (m)</th>
-<th class="r">kg/m</th><th class="r">Peso (kg)</th></tr></thead>
+<th class="r">N° × elem.</th><th class="r">Cant.</th><th class="r">L corte (m)</th><th class="r">Long. total (ml)</th></tr></thead>
 <tbody>{cart_rows}
-<tr class="tot"><td colspan="8">Subtotal #4 (1/2")</td><td class="r">{n2(l4)}</td><td></td><td class="r">{n2(k4)}</td></tr>
-<tr class="tot"><td colspan="8">Subtotal #3 (3/8")</td><td class="r">{n2(l3)}</td><td></td><td class="r">{n2(k3)}</td></tr>
-<tr class="tot"><td colspan="10">Total neto</td><td class="r">{n2(k4+k3)}</td></tr>
-<tr class="tot"><td colspan="10">Total con 5 % de desperdicio</td><td class="r">{n2((k4+k3)*(1+DESP_ACERO))}</td></tr>
+<tr class="tot"><td colspan="8">Barra #4 (1/2") — neto / con 5 % de desperdicio</td><td class="r">{n2(l4)} / {n2(l4*(1+DESP_ACERO))}</td></tr>
+<tr class="tot"><td colspan="8">Barra #3 (3/8") — neto / con 5 % de desperdicio</td><td class="r">{n2(l3)} / {n2(l3*(1+DESP_ACERO))}</td></tr>
+<tr class="tot"><td colspan="8">Total #4 + #3 — neto / con 5 % de desperdicio</td><td class="r">{n2(l4+l3)} / {n2((l4+l3)*(1+DESP_ACERO))}</td></tr>
 </tbody>
 </table>
 <ul class="notas">
@@ -222,7 +215,6 @@ h2.c2 {{ break-before: page; }}
 </tbody>
 </table>
 <ul class="notas">
-  <li>Cuantía de referencia: {(k4+k3)/vtot:,.1f} kg de acero por m³ de concreto (valores netos).</li>
   <li>El solado no está dibujado en EST-02. Se recomienda bajo la losa en contacto con el suelo y se da aparte del concreto estructural.</li>
   <li>El plano no indica f'c ni fy. Se asumieron 21 MPa y 420 MPa: confirmar con el calculista.</li>
 </ul>
@@ -272,14 +264,13 @@ P["A1"] = "PARÁMETROS"; P["A1"].font = TIT
 P["A2"] = "Celdas en azul sobre amarillo: editables. Todas las tablas se recalculan con ellas."
 P["A2"].font = Font(name=F, size=9, italic=True)
 header(P, 4, ["Parámetro", "Valor", "Und", "Fuente"], [44, 12, 8, 50])
-PAR = [("Peso barra #3 (3/8\")", 0.560, "kg/m", "NTC 2289"), ("Peso barra #4 (1/2\")", 0.994, "kg/m", "NTC 2289"),
-       ("Desperdicio acero", 0.05, "", "Criterio de obra"), ("Desperdicio concreto", 0.05, "", "Criterio de obra"),
+PAR = [("Desperdicio acero", 0.05, "", "Criterio de obra"), ("Desperdicio concreto", 0.05, "", "Criterio de obra"),
        ("f'c concreto estructural", 21, "MPa", "Supuesto; EST-02 no lo indica"),
        ("fy acero de refuerzo", 420, "MPa", "Supuesto; EST-02 no lo indica")]
 for i, (n, v, u, src) in enumerate(PAR, 5):
     cell(P, f"A{i}", n); cell(P, f"B{i}", v, BLUE, "0%" if "Desperdicio" in n else "0.000", YEL)
     cell(P, f"C{i}", u); cell(P, f"D{i}", src)
-PW3, PW4, DA, DC = "Parámetros!$B$5", "Parámetros!$B$6", "Parámetros!$B$7", "Parámetros!$B$8"
+DA, DC = "Parámetros!$B$5", "Parámetros!$B$6"
 
 # Cartilla
 C = wb.create_sheet("Cartilla acero")
@@ -287,8 +278,8 @@ C["A1"] = "CARTILLA DE DESPIECE — ACERO DE REFUERZO FOSO DE ASCENSOR (EST-02)"
 C["A2"] = "Valores en azul tomados del plano EST-02 (confirmados en obra). N° de barras = REDONDEAR.MAS(distribución ÷ separación) + 1."
 C["A2"].font = Font(name=F, size=9, italic=True)
 header(C, 4, ["Marca", "Elemento", "Forma", "Tramos (m)", "Barra", "Separación (m)", "Long. a distribuir (m)",
-              "N° por elemento", "Elementos", "Cant. total", "L corte (m)", "Long. total (m)", "kg/m", "Peso (kg)"],
-       [7, 36, 30, 18, 7, 11, 12, 10, 10, 10, 10, 12, 8, 11])
+              "N° por elemento", "Elementos", "Cant. total", "L corte (m)", "Long. total (ml)"],
+       [7, 36, 30, 18, 7, 11, 12, 10, 10, 10, 10, 14])
 r0 = 5
 for i, (m, el, bar, sep, dist, nfix, mult, L, forma, tramos, _) in enumerate(CARTILLA):
     r = r0 + i
@@ -300,25 +291,30 @@ for i, (m, el, bar, sep, dist, nfix, mult, L, forma, tramos, _) in enumerate(CAR
     cell(C, f"I{r}", mult, BLUE, "0")
     cell(C, f"J{r}", f"=H{r}*I{r}", BOLD, "0")
     cell(C, f"K{r}", L, BLUE, "0.00")
-    cell(C, f"L{r}", f"=J{r}*K{r}", fmt="#,##0.00")
-    cell(C, f"M{r}", f'=IF(E{r}="#4",{PW4},{PW3})', Font(name=F, size=10, color="008000"), "0.000")
-    cell(C, f"N{r}", f"=L{r}*M{r}", BOLD, "#,##0.00")
+    cell(C, f"L{r}", f"=J{r}*K{r}", BOLD, "#,##0.00")
 r1 = r0 + len(CARTILLA) - 1
 r = r1 + 1
 TOTS = {}
-for lbl, frm_l, frm_k, key in [
-    ("Subtotal #4 (1/2\")", f'=SUMIF(E{r0}:E{r1},"#4",L{r0}:L{r1})', f'=SUMIF(E{r0}:E{r1},"#4",N{r0}:N{r1})', "k4"),
-    ("Subtotal #3 (3/8\")", f'=SUMIF(E{r0}:E{r1},"#3",L{r0}:L{r1})', f'=SUMIF(E{r0}:E{r1},"#3",N{r0}:N{r1})', "k3"),
+for lbl, frm, key in [
+    ("Barra #4 (1/2\") — neto", f'=SUMIF(E{r0}:E{r1},"#4",L{r0}:L{r1})', "l4"),
+    ("Barra #4 (1/2\") — con desperdicio", None, "l4b"),
+    ("Barra #3 (3/8\") — neto", f'=SUMIF(E{r0}:E{r1},"#3",L{r0}:L{r1})', "l3"),
+    ("Barra #3 (3/8\") — con desperdicio", None, "l3b"),
+    ("Total #4 + #3 — neto", None, "neto"),
+    ("Total #4 + #3 — con desperdicio", None, "bruto"),
 ]:
+    if key == "l4b":
+        frm = f"=L{TOTS['l4']}*(1+{DA})"
+    elif key == "l3b":
+        frm = f"=L{TOTS['l3']}*(1+{DA})"
+    elif key == "neto":
+        frm = f"=L{TOTS['l4']}+L{TOTS['l3']}"
+    elif key == "bruto":
+        frm = f"=L{TOTS['l4b']}+L{TOTS['l3b']}"
     cell(C, f"A{r}", lbl, BOLD, fill=TOT); C.merge_cells(f"A{r}:K{r}")
-    cell(C, f"L{r}", frm_l, BOLD, "#,##0.00", TOT); cell(C, f"M{r}", None, fill=TOT); cell(C, f"N{r}", frm_k, BOLD, "#,##0.00", TOT)
+    cell(C, f"L{r}", frm, BOLD, "#,##0.00", TOT)
     TOTS[key] = r
     r += 1
-cell(C, f"A{r}", "Total neto", BOLD, fill=TOT); C.merge_cells(f"A{r}:M{r}")
-cell(C, f"N{r}", f"=N{TOTS['k4']}+N{TOTS['k3']}", BOLD, "#,##0.00", TOT); TOTS["neto"] = r
-r += 1
-cell(C, f"A{r}", "Total con desperdicio", BOLD, fill=TOT); C.merge_cells(f"A{r}:M{r}")
-cell(C, f"N{r}", f"=N{TOTS['neto']}*(1+{DA})", BOLD, "#,##0.00", TOT); TOTS["bruto"] = r
 C.freeze_panes = "C5"
 
 # Concreto
@@ -355,9 +351,6 @@ cell(K, f"C{r}", SOLADO[2], BLUE, "0.00"); cell(K, f"D{r}", SOLADO[3], BLUE, "0.
 cell(K, f"F{r}", f"=C{r}*D{r}*E{r}", fmt="0.000"); cell(K, f"G{r}", 0, fmt='0.000;-0.000;"-"')
 cell(K, f"H{r}", f"=B{r}*F{r}", BOLD, "0.000"); cell(K, f"I{r}", f"=H{r}*(1+{DC})", fmt="0.000")
 cell(K, f"J{r}", "No dibujado en EST-02. Losa + 0.10 m por lado. Va aparte del concreto estructural.")
-r += 2
-cell(K, f"A{r}", "Cuantía de referencia (kg acero / m³ concreto, neto)", BOLD)
-cell(K, f"H{r}", f"='Cartilla acero'!N{TOTS['neto']}/H{KT}", BOLD, "0.0")
 
 # Resumen
 R = wb.create_sheet("Resumen", 0)
@@ -366,14 +359,14 @@ R["A2"] = "Multifamiliar Herrera · Plano EST-02 v.01 (19/06/2026). Valores enla
 R["A2"].font = Font(name=F, size=9, italic=True)
 header(R, 4, ["Concepto", "Neto", "Con desperdicio", "Und"], [44, 14, 16, 8])
 GRN = Font(name=F, size=10, color="008000")
-RES = [("Acero #4 (1/2\")", f"='Cartilla acero'!N{TOTS['k4']}", f"=B5*(1+{DA})", "kg"),
-       ("Acero #3 (3/8\")", f"='Cartilla acero'!N{TOTS['k3']}", f"=B6*(1+{DA})", "kg"),
-       ("Acero total", "=B5+B6", "=C5+C6", "kg"),
+RES = [("Acero #4 (1/2\")", f"='Cartilla acero'!L{TOTS['l4']}", f"=B5*(1+{DA})", "ml"),
+       ("Acero #3 (3/8\")", f"='Cartilla acero'!L{TOTS['l3']}", f"=B6*(1+{DA})", "ml"),
+       ("Acero total", "=B5+B6", "=C5+C6", "ml"),
        ("Concreto estructural 21 MPa", f"='Concreto por elementos'!H{KT}", f"='Concreto por elementos'!I{KT}", "m³")]
 for i, (n, a, b, u) in enumerate(RES, 5):
     cell(R, f"A{i}", n, BOLD if "total" in n.lower() else BLK)
-    cell(R, f"B{i}", a, GRN, "#,##0.00" if u == "kg" else "0.000")
-    cell(R, f"C{i}", b, BOLD, "#,##0.00" if u == "kg" else "0.000")
+    cell(R, f"B{i}", a, GRN, "#,##0.00" if u == "ml" else "0.000")
+    cell(R, f"C{i}", b, BOLD, "#,##0.00" if u == "ml" else "0.000")
     cell(R, f"D{i}", u, al=CE)
 
 for ws in wb.worksheets:
@@ -383,4 +376,4 @@ for ws in wb.worksheets:
     ws.page_setup.fitToHeight = 0
     ws.sheet_properties.pageSetUpPr.fitToPage = True
 wb.save(XLSX_OUT)
-print(f"#4 {k4:.2f} kg | #3 {k3:.2f} kg | neto {k4+k3:.2f} | bruto {(k4+k3)*1.05:.2f} | conc {vtot:.3f} / {vtot*1.05:.3f}")
+print(f"#4 {l4:.2f} ml | #3 {l3:.2f} ml | neto {l4+l3:.2f} | bruto {(l4+l3)*1.05:.2f} | conc {vtot:.3f} / {vtot*1.05:.3f}")

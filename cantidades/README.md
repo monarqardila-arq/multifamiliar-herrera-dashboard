@@ -33,8 +33,8 @@ Geometría: luz libre de 1.50 × 1.90 m, muros de concreto e = 0.15 m, 4 columna
 | 2.3 | Losa de fondo e = 0.20 | Concreto 21 MPa + impermeabilizante integral | m³ | 0.78 |
 | 2.4 | Muros e = 0.15, h = 1.20 | Concreto 21 MPa + impermeabilizante integral | m³ | 1.13 |
 | 2.5 | Columnas 40×40, h = 1.40 | Concreto 21 MPa | m³ | 0.94 |
-| 2.6 | Acero #4 (columnas con 4 #4 c/u) | fy 420 MPa, NTC 2289 | kg | 272.4 |
-| 2.7 | Acero #3 (flejes @0.075, L = 1.50 m) | fy 420 MPa | kg | 70.6 |
+| 2.6 | Acero #4 (columnas con 4 #4 c/u) | fy 420 MPa, NTC 2289 | ml | 274.05 |
+| 2.7 | Acero #3 (flejes @0.075, L = 1.50 m) | fy 420 MPa | ml | 126.00 |
 | 2.8 | Formaleta | Muros (2 caras) + columnas | m² | 22.72 |
 | 2.9 | Impermeabilización interior | Mortero cementicio + mediacaña (recomendado) | m² | 11.01 |
 | 2.10 | Relleno compactado | Capas de ≤ 0.20 m al 95 % del Proctor modificado | m³ | 5.81 |
