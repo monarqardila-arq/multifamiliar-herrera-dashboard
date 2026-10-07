@@ -348,7 +348,7 @@ DESP = [
     ("Muros sentido Y — horizontales", "#4", 0.20, f"={G['hm']}", None, 2, 2.50, "Planta refuerzo: #4 c/0.20 L=2.50"),
     ("Muros sentido X — verticales (gancho a losa)", "#4", 0.20, f"={G['luzX']}", None, 2, 1.75, "Cortes A-A/B-B: #4 c/0.20 L=1.75"),
     ("Muros sentido Y — verticales (gancho a losa)", "#4", 0.20, f"={G['luzY']}", None, 2, 1.75, "Cortes A-A/B-B: #4 c/0.20 L=1.75"),
-    ("Columnas 40×40 — longitudinal", "#4", None, None, 4, 4, 1.85, "Confirmado: 4 #4 por columna (L=1.85 del detalle)"),
+    ("Columnas 40×40 — longitudinal", "#4", None, None, 4, 4, 1.80, "Confirmado: 4 #4 por columna, L=1.80"),
     ("Columnas 40×40 — flejes cerrados", "#3", 0.075, f"={G['H']}", None, 4, 1.48, "Confirmado: fleje #3 @0.075 L=1.48"),
 ]
 d0 = r + 1
@@ -713,8 +713,8 @@ OBS = [
      "Enviar EST-01 para cuantificar concreto y acero del edificio completo."),
     ("Faltante crítico", "El ascensor no está modelado en Revit (QA crítico). El foso aparece en EST-02 entre ejes A-B / 1-2.",
      "Coordinar la ubicación del ducto en planta arquitectónica y la ficha del proveedor (foso útil 1.20 m, luz 1.50 × 1.90 m)."),
-    ("Resuelto", "Columnas 40×40: confirmado 4 #4 por columna (16 barras en total). Se tomó L=1.85 m del detalle de refuerzo.",
-     "Confirmado por el arquitecto. Verificar que la longitud de 1.85 m quede en la cartilla final."),
+    ("Resuelto", "Columnas 40×40: confirmado 4 #4 por columna (16 barras en total). Longitud total confirmada L=1.80 m.",
+     "Confirmado por el arquitecto."),
     ("Resuelto", "Flejes: confirmado fleje #3 @0.075 con L=1.48 m (80 flejes en total).",
      "Confirmado por el arquitecto."),
     ("EST-02", "Barras de losa: la planta indica L=2.10/2.50 y los cortes L=2.20/2.60. Se usaron las de los cortes (losa) y las de planta (horizontales de muros).",
