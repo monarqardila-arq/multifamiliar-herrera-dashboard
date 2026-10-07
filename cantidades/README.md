@@ -117,7 +117,7 @@ Las cantidades de concreto y acero incluyen 5 % de desperdicio.
 5. **El ascensor no está modelado en Revit.** Hay que coordinar la ubicación del ducto y validar el foso con el proveedor: profundidad útil de 1.20 m y luz de 1.50 × 1.90 m.
 6. **Dudas del EST-02 para el calculista:**
    - Resuelto: las columnas llevan 4 #4 cada una (L = 1.80 m) y el fleje mide L = 1.48 m.
-   - Los verticales de muro tienen una pata superior de 0.20 m que no cabe en un muro de 0.15 m: definir hacia dónde se dobla.
+   - Formas: los verticales de muro y de columna rematan arriba con gancho a 180° (retorno de 0.20 m) y abajo con pata a 90° de 0.20 m. Las barras de losa llevan gancho a 180° en ambos extremos.
    - La lámina no indica f'c, fy ni si el perfil es HEA o HEB.
    - El rótulo dice "TANQUE ALMACENAMIENTO".
 7. **Quedan pendientes** por falta de datos: enchapes, guardaescobas, mesones, instalaciones, cubierta, escaleras y P6–P7.

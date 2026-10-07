@@ -342,13 +342,13 @@ hdr(FO, r, ["Elemento / posición", "Barra", "Separación (m)", "Long. a distrib
             "N° barras por capa/elem.", "Capas o elementos", "N° barras total", "L barra (m)",
             "Long. total (m)", "kg/m", "Peso (kg)", "Fuente en plano"])
 DESP = [
-    ("Losa fondo — barras sentido X (corto)", "#4", 0.20, 2.08, None, 2, 2.20, "Corte A-A: #4 c/0.20 L=2.20 (doble parrilla)"),
-    ("Losa fondo — barras sentido Y (largo)", "#4", 0.20, 1.68, None, 2, 2.60, "Corte B-B: #4 c/0.20 L=2.60 (doble parrilla)"),
-    ("Muros sentido X — horizontales", "#4", 0.20, f"={G['hm']}", None, 2, 2.10, "Planta refuerzo: #4 c/0.20 L=2.10"),
-    ("Muros sentido Y — horizontales", "#4", 0.20, f"={G['hm']}", None, 2, 2.50, "Planta refuerzo: #4 c/0.20 L=2.50"),
-    ("Muros sentido X — verticales (gancho a losa)", "#4", 0.20, f"={G['luzX']}", None, 2, 1.75, "Cortes A-A/B-B: #4 c/0.20 L=1.75"),
-    ("Muros sentido Y — verticales (gancho a losa)", "#4", 0.20, f"={G['luzY']}", None, 2, 1.75, "Cortes A-A/B-B: #4 c/0.20 L=1.75"),
-    ("Columnas 40×40 — longitudinal", "#4", None, None, 4, 4, 1.80, "Confirmado: 4 #4 por columna, L=1.80"),
+    ("Losa fondo — barras sentido X (corto)", "#4", 0.20, 2.08, None, 2, 2.20, "Corte A-A: recto 1.70 + gancho 180° de 0.20 en cada extremo, L=2.20 (doble parrilla)"),
+    ("Losa fondo — barras sentido Y (largo)", "#4", 0.20, 1.68, None, 2, 2.60, "Corte B-B: recto 2.10 + gancho 180° de 0.20 en cada extremo, L=2.60 (doble parrilla)"),
+    ("Muros sentido X — horizontales", "#4", 0.20, f"={G['hm']}", None, 2, 2.10, "Planta refuerzo: recto 1.68 + patas a 90° de 0.20, L=2.10"),
+    ("Muros sentido Y — horizontales", "#4", 0.20, f"={G['hm']}", None, 2, 2.50, "Planta refuerzo: recto 2.08 + patas a 90° de 0.20, L=2.50"),
+    ("Muros sentido X — verticales", "#4", 0.20, f"={G['luzX']}", None, 2, 1.75, "Cortes: recto 1.28 + gancho sup. 180° de 0.20 + pata inf. 90° de 0.20, L=1.75"),
+    ("Muros sentido Y — verticales", "#4", 0.20, f"={G['luzY']}", None, 2, 1.75, "Cortes: recto 1.28 + gancho sup. 180° de 0.20 + pata inf. 90° de 0.20, L=1.75"),
+    ("Columnas 40×40 — longitudinal", "#4", None, None, 4, 4, 1.80, "Confirmado: 4 #4 por columna, recto 1.32 + gancho sup. 180° de 0.20 + pata inf. 90° de 0.20, L=1.80"),
     ("Columnas 40×40 — flejes cerrados", "#3", 0.075, f"={G['H']}", None, 4, 1.48, "Confirmado: fleje #3 @0.075 L=1.48"),
 ]
 d0 = r + 1
@@ -717,8 +717,8 @@ OBS = [
      "Confirmado por el arquitecto."),
     ("Resuelto", "Flejes: confirmado fleje #3 @0.075 con L=1.48 m (80 flejes en total).",
      "Confirmado por el arquitecto."),
-    ("EST-02", "Barras de losa: la planta indica L=2.10/2.50 y los cortes L=2.20/2.60. Se usaron las de los cortes (losa) y las de planta (horizontales de muros).",
-     "Confirmar la cartilla de hierros con el calculista."),
+    ("Resuelto", "Longitudes: L=2.20/2.60 son las barras de losa (ganchos a 180°) y L=2.10/2.50 las horizontales de muro (patas a 90°). Son barras distintas, no hay inconsistencia.",
+     "Ninguna."),
     ("EST-02", "La lámina no indica f'c del concreto, fy del acero, recubrimientos generales ni tipo exacto de perfil (HEA/HEB 200). Se asumió 21 MPa, 420 MPa y HEB 200.",
      "Verificar en notas generales de EST-01."),
     ("EST-02", "El rótulo indica archivo digital '2026_06_24_TANQUE ALMACENAMIENTO_T2', parece una plantilla reutilizada.",
