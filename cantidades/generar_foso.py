@@ -133,6 +133,78 @@ conc_rows = "".join(
 sol = SOLADO
 sol_v = sol[1] * sol[2] * sol[3] * sol[4]
 
+
+# ------------------------------------------------------------------ PLAN DE CORTE (varilla comercial de 6 m)
+VARILLA = 6.00
+# Patrón, barra, n° de varillas, piezas [(marca, L)], uso sugerido del retal
+PLAN = [
+    ("A", "#4", 14, [("M2", 2.50), ("M4", 1.75), ("M4", 1.75)], "Sin retal"),
+    ("B", "#4", 8, [("L1", 2.20), ("C1", 1.80), ("C1", 1.80)], "Chatarra"),
+    ("C", "#4", 7, [("M1", 2.10), ("M1", 2.10), ("M3", 1.75)], "Chatarra"),
+    ("D", "#4", 10, [("L2", 2.60), ("L2", 2.60)], "Silletas para la parrilla superior de la losa (1 por retal)"),
+    ("E", "#4", 8, [("L1", 2.20), ("L1", 2.20)], "Estacas de formaleta y de replanteo (3 de 0.50 m por retal)"),
+    ("F", "#4", 1, [("M3", 1.75)], "Reserva para reponer una pieza mal cortada"),
+    ("G", "#3", 20, [("E1", 1.50)] * 4, "Sin retal"),
+]
+# Las 1.75 m se reparten así: M4 = 14 × 2 = 28 piezas, pero M4 solo tiene 20 → 8 de ellas son M3.
+PLAN[0] = ("A", "#4", 14, [("M2", 2.50), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Sin retal")
+_need = {}
+for m, el, bar, sep, dist, nfix, mult, L, *_ in CARTILLA:
+    _need[(bar, L)] = _need.get((bar, L), 0) + nbarras(sep, dist, nfix) * mult
+_got = {}
+for pat, bar, nv, pcs, uso in PLAN:
+    assert sum(L for _, L in pcs) <= VARILLA + 1e-9, pat
+    for _, L in pcs:
+        _got[(bar, L)] = _got.get((bar, L), 0) + nv
+assert _got == _need, (_got, _need)
+VAR = {b: sum(nv for _, bb, nv, _, _ in PLAN if bb == b) for b in ("#4", "#3")}
+
+
+def barra_svg(pcs, w=330, h=22):
+    sc = (w - 2) / VARILLA
+    x, out = 1, []
+    for m, L in pcs:
+        ww = L * sc
+        out.append(f'<rect x="{x:.1f}" y="2" width="{ww:.1f}" height="{h-4}" class="pz"/>'
+                   f'<text x="{x+ww/2:.1f}" y="{h/2+4:.1f}">{m} {L:.2f}</text>')
+        x += ww
+    rest = VARILLA - sum(L for _, L in pcs)
+    if rest > 0.001:
+        ww = rest * sc
+        out.append(f'<rect x="{x:.1f}" y="2" width="{ww:.1f}" height="{h-4}" class="rt"/>')
+        if ww > 26:
+            out.append(f'<text x="{x+ww/2:.1f}" y="{h/2+4:.1f}" class="rtt">{rest:.2f}</text>')
+    return f'<svg viewBox="0 0 {w} {h}" class="bar6">' + "".join(out) + "</svg>"
+
+
+plan_rows = "".join(
+    f'<tr><td class="c b">{pat}</td><td class="c">{bar}</td><td class="r b">{nv}</td><td>{barra_svg(pcs)}</td>'
+    f'<td class="r">{VARILLA - sum(L for _, L in pcs):.2f}</td><td class="r">{nv*(VARILLA - sum(L for _, L in pcs)):.2f}</td><td>{uso}</td></tr>'
+    for pat, bar, nv, pcs, uso in PLAN)
+ret4 = VAR["#4"] * VARILLA - l4
+PLAN_HTML = f"""
+<h2 class="c2">3. Plan de corte en varillas comerciales de 6.00 m</h2>
+<div class="res">
+  <div><b>{VAR['#4']} varillas</b><span>#4 (1/2") de 6 m, para {n2(l4)} ml de piezas</span></div>
+  <div><b>{VAR['#3']} varillas</b><span>#3 (3/8") de 6 m, para {n2(l3)} ml de piezas, sin retal</span></div>
+  <div><b>{n2(ret4)} ml</b><span>Retal total de #4 ({ret4/(VAR['#4']*VARILLA)*100:.1f} % de lo comprado)</span></div>
+  <div><b>{VAR['#4']+VAR['#3']} varillas</b><span>Total a pedir, sin reserva</span></div>
+</div>
+<table style="margin-top:8px">
+<thead><tr><th>Patrón</th><th>Barra</th><th class="r">Varillas</th><th>Cortes en cada varilla de 6.00 m (marca y longitud)</th>
+<th class="r">Retal c/u (m)</th><th class="r">Retal total (m)</th><th>Uso del retal</th></tr></thead>
+<tbody>{plan_rows}</tbody>
+</table>
+<ul class="notas">
+  <li>48 varillas #4 es el mínimo posible. Ninguna varilla admite 4 piezas (4 × 1.75 = 7.00 m), y las de 2.60 m solo admiten una pieza más. Con 47 varillas no caben las 124 piezas.</li>
+  <li>Las piezas de 1.75 m de M3 y M4 son iguales: en el patrón A van 20 de M4 y 8 de M3.</li>
+  <li>Cortar primero las piezas largas de cada varilla y marcar cada pieza con su marca (L1, M2…) antes de figurar.</li>
+  <li>Silletas: varilla doblada en forma de puente de unos 0.75 m de desarrollo, que sostiene la parrilla superior a 0.15 m. Se necesitan unas 6 a 9 para la losa (una cada 0.60 a 0.80 m).</li>
+  <li>Los retales de 0.20 m y 0.05 m no tienen uso estructural: van como chatarra.</li>
+  <li>Se recomienda pedir 1 varilla #3 de reserva. La #4 ya tiene reserva en el patrón F (retal de 4.25 m).</li>
+</ul>
+"""
+
 HTML = f"""<!doctype html><html lang="es"><head><meta charset="utf-8">
 <title>Foso de ascensor — cartilla de acero y concreto</title>
 <style>
@@ -158,6 +230,11 @@ col.el {{ width: 230px; }}
 svg.fig {{ width: 140px; height: auto; display: block; }}
 svg.fig path, svg.fig polyline, svg.fig rect {{ fill: none; stroke: #b3261e; stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }}
 svg.fig text {{ font: 9px Arial, sans-serif; fill: #333; text-anchor: middle; }}
+svg.bar6 {{ width: 340px; height: auto; display: block; }}
+svg.bar6 .pz {{ fill: #fbe3df; stroke: #b3261e; stroke-width: 1; }}
+svg.bar6 .rt {{ fill: #e6e6e6; stroke: #999; stroke-width: 1; stroke-dasharray: 3 2; }}
+svg.bar6 text {{ font: 8.5px Arial, sans-serif; fill: #1a1a1a; text-anchor: middle; }}
+svg.bar6 .rtt {{ fill: #666; }}
 .res {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }}
 h2.c2 {{ break-before: page; }}
 .res div {{ border: 0.8pt solid #9aa09a; padding: 6px 8px; }}
@@ -219,6 +296,7 @@ h2.c2 {{ break-before: page; }}
   <li>El plano no indica f'c ni fy. Se asumieron 21 MPa y 420 MPa: confirmar con el calculista.</li>
 </ul>
 </div>
+{PLAN_HTML}
 </body></html>"""
 open(HTML_OUT, "w").write(HTML)
 
@@ -369,6 +447,40 @@ for i, (n, a, b, u) in enumerate(RES, 5):
     cell(R, f"C{i}", b, BOLD, "#,##0.00" if u == "ml" else "0.000")
     cell(R, f"D{i}", u, al=CE)
 
+# Plan de corte
+PC = wb.create_sheet("Plan de corte")
+PC["A1"] = "PLAN DE CORTE EN VARILLAS COMERCIALES DE 6.00 m"; PC["A1"].font = TIT
+PC["A2"] = "Cada fila es un patrón: cuántas varillas se cortan igual y qué piezas salen de cada una. 48 varillas #4 es el mínimo posible."
+PC["A2"].font = Font(name=F, size=9, italic=True)
+header(PC, 4, ["Patrón", "Barra", "Varillas", "Pieza 1", "L1 (m)", "Pieza 2", "L2 (m)", "Pieza 3", "L3 (m)", "Pieza 4", "L4 (m)",
+               "Usado por varilla (m)", "Retal c/u (m)", "Retal total (m)", "Uso del retal"],
+       [8, 7, 9, 9, 8, 9, 8, 9, 8, 9, 8, 12, 11, 12, 52])
+PC["Q3"] = "Longitud varilla (m)"; PC["Q3"].font = BOLD
+cell(PC, "R3", VARILLA, BLUE, "0.00", YEL)
+q0 = 5
+for i, (pat, bar, nv, pcs, uso) in enumerate(PLAN):
+    r = q0 + i
+    cell(PC, f"A{r}", pat, BOLD, al=CE); cell(PC, f"B{r}", bar, al=CE); cell(PC, f"C{r}", nv, BLUE, "0")
+    for j in range(4):
+        cm, cl = get_column_letter(4 + 2 * j), get_column_letter(5 + 2 * j)
+        if j < len(pcs):
+            cell(PC, f"{cm}{r}", pcs[j][0], al=CE); cell(PC, f"{cl}{r}", pcs[j][1], BLUE, "0.00")
+        else:
+            cell(PC, f"{cm}{r}", None); cell(PC, f"{cl}{r}", None)
+    cell(PC, f"L{r}", f"=SUM(E{r},G{r},I{r},K{r})", fmt="0.00")
+    cell(PC, f"M{r}", f"=$R$3-L{r}", fmt="0.00")
+    cell(PC, f"N{r}", f"=C{r}*M{r}", fmt="0.00")
+    cell(PC, f"O{r}", uso)
+q1 = q0 + len(PLAN) - 1
+r = q1 + 1
+for bar in ("#4", "#3"):
+    cell(PC, f"A{r}", f"Total varillas {bar}", BOLD, fill=TOT); PC.merge_cells(f"A{r}:B{r}")
+    cell(PC, f"C{r}", f'=SUMIF(B{q0}:B{q1},"{bar}",C{q0}:C{q1})', BOLD, "0", TOT)
+    cell(PC, f"D{r}", "Retal total", BOLD, fill=TOT); PC.merge_cells(f"D{r}:M{r}")
+    cell(PC, f"N{r}", f'=SUMIF(B{q0}:B{q1},"{bar}",N{q0}:N{q1})', BOLD, "0.00", TOT)
+    cell(PC, f"O{r}", f'=TEXT(C{r}*$R$3,"0.00")&" ml comprados"', fill=TOT)
+    r += 1
+
 for ws in wb.worksheets:
     ws.sheet_view.showGridLines = False
     ws.page_setup.orientation = "landscape"
@@ -376,4 +488,4 @@ for ws in wb.worksheets:
     ws.page_setup.fitToHeight = 0
     ws.sheet_properties.pageSetUpPr.fitToPage = True
 wb.save(XLSX_OUT)
-print(f"#4 {l4:.2f} ml | #3 {l3:.2f} ml | neto {l4+l3:.2f} | bruto {(l4+l3)*1.05:.2f} | conc {vtot:.3f} / {vtot*1.05:.3f}")
+print(f"varillas {VAR} | #4 {l4:.2f} ml | #3 {l3:.2f} ml | neto {l4+l3:.2f} | bruto {(l4+l3)*1.05:.2f} | conc {vtot:.3f} / {vtot*1.05:.3f}")
