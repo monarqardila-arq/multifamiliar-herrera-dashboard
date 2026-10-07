@@ -348,9 +348,8 @@ DESP = [
     ("Muros sentido Y — horizontales", "#4", 0.20, f"={G['hm']}", None, 2, 2.50, "Planta refuerzo: #4 c/0.20 L=2.50"),
     ("Muros sentido X — verticales (gancho a losa)", "#4", 0.20, f"={G['luzX']}", None, 2, 1.75, "Cortes A-A/B-B: #4 c/0.20 L=1.75"),
     ("Muros sentido Y — verticales (gancho a losa)", "#4", 0.20, f"={G['luzY']}", None, 2, 1.75, "Cortes A-A/B-B: #4 c/0.20 L=1.75"),
-    ("Columnas 40×40 — longitudinal", "#4", None, None, 6, 4, 1.80, "Detalle sección columna: 6 #4 L=1.80"),
-    ("Columnas 40×40 — longitudinal", "#4", None, None, 6, 4, 1.85, "Detalle sección columna: 6 #4 L=1.85"),
-    ("Columnas 40×40 — flejes cerrados", "#3", 0.075, f"={G['H']}", None, 4, 1.50, "Detalle columna: fleje #3 @0.075 L=1.50"),
+    ("Columnas 40×40 — longitudinal", "#4", None, None, 4, 4, 1.85, "Confirmado: 4 #4 por columna (L=1.85 del detalle)"),
+    ("Columnas 40×40 — flejes cerrados", "#3", 0.075, f"={G['H']}", None, 4, 1.48, "Confirmado: fleje #3 @0.075 L=1.48"),
 ]
 d0 = r + 1
 for name, bar, sep, dist, nfix, mult, L, src in DESP:
@@ -497,10 +496,10 @@ item("2.5", "Concreto columnas 40×40 cm",
      "m³", total=f"={FOS}B{FC['col']}*(1+{SREF['desp_conc']})", src="E", obs="Incluye desperdicio.", fmt=N3)
 item("2.6", "Acero de refuerzo #4 (1/2\")",
      "Acero corrugado fy = 420 MPa (60.000 psi), NTC 2289. Losa doble parrilla #4 c/0.20; muros #4 c/0.20 en ambos sentidos; "
-     "longitudinal de columnas. Figurado según cartilla (hoja Foso ascensor).",
+     "longitudinal de columnas 4 #4 por columna. Figurado según cartilla (hoja Foso ascensor).",
      "kg", total=f"={FOS}K{FC['k4']}*(1+{SREF['desp_acero']})", src="E/D", obs="Incluye desperdicio.")
 item("2.7", "Acero de refuerzo #3 (3/8\") — flejes",
-     "Acero corrugado fy = 420 MPa, NTC 2289. Flejes cerrados #3 @0.075 m, gancho a 135°.",
+     "Acero corrugado fy = 420 MPa, NTC 2289. Flejes cerrados #3 @0.075 m, L = 1.48 m, gancho a 135°.",
      "kg", total=f"={FOS}K{FC['k3']}*(1+{SREF['desp_acero']})", src="E/D", obs="Incluye desperdicio.")
 item("2.8", "Formaleta para muros y columnas del foso",
      "Formaleta metálica o en madera cepillada, con desmoldante. Ambas caras de muros + caras exteriores de columnas.",
@@ -714,10 +713,10 @@ OBS = [
      "Enviar EST-01 para cuantificar concreto y acero del edificio completo."),
     ("Faltante crítico", "El ascensor no está modelado en Revit (QA crítico). El foso aparece en EST-02 entre ejes A-B / 1-2.",
      "Coordinar la ubicación del ducto en planta arquitectónica y la ficha del proveedor (foso útil 1.20 m, luz 1.50 × 1.90 m)."),
-    ("EST-02", "Columnas 40×40: la sección muestra 4 #4, pero el detalle de refuerzo indica 6 #4 L=1.80 + 6 #4 L=1.85. Se cuantificaron ambas tandas (12 barras por columna).",
-     "Confirmar con el calculista (Ing. A. Trujillo Rivas). Si es solo 4 #4, el acero #4 baja ≈ 60 kg."),
-    ("EST-02", "Flejes: aparecen dos longitudes (L=1.50 m y L=1.90 m) para el fleje #3 @0.075. Se usó L=1.50 m.",
-     "Confirmar. Con L=1.90 m el acero #3 sube ≈ 18 kg."),
+    ("Resuelto", "Columnas 40×40: confirmado 4 #4 por columna (16 barras en total). Se tomó L=1.85 m del detalle de refuerzo.",
+     "Confirmado por el arquitecto. Verificar que la longitud de 1.85 m quede en la cartilla final."),
+    ("Resuelto", "Flejes: confirmado fleje #3 @0.075 con L=1.48 m (80 flejes en total).",
+     "Confirmado por el arquitecto."),
     ("EST-02", "Barras de losa: la planta indica L=2.10/2.50 y los cortes L=2.20/2.60. Se usaron las de los cortes (losa) y las de planta (horizontales de muros).",
      "Confirmar la cartilla de hierros con el calculista."),
     ("EST-02", "La lámina no indica f'c del concreto, fy del acero, recubrimientos generales ni tipo exacto de perfil (HEA/HEB 200). Se asumió 21 MPa, 420 MPa y HEB 200.",
