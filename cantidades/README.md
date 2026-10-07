@@ -34,7 +34,7 @@ Geometría: luz libre de 1.50 × 1.90 m, muros de concreto e = 0.15 m, 4 columna
 | 2.4 | Muros e = 0.15, h = 1.20 | Concreto 21 MPa + impermeabilizante integral | m³ | 1.13 |
 | 2.5 | Columnas 40×40, h = 1.40 | Concreto 21 MPa | m³ | 0.94 |
 | 2.6 | Acero #4 (columnas con 4 #4 c/u) | fy 420 MPa, NTC 2289 | kg | 272.4 |
-| 2.7 | Acero #3 (flejes @0.075, L = 1.48 m) | fy 420 MPa | kg | 69.6 |
+| 2.7 | Acero #3 (flejes @0.075, L = 1.50 m) | fy 420 MPa | kg | 70.6 |
 | 2.8 | Formaleta | Muros (2 caras) + columnas | m² | 22.72 |
 | 2.9 | Impermeabilización interior | Mortero cementicio + mediacaña (recomendado) | m² | 11.01 |
 | 2.10 | Relleno compactado | Capas de ≤ 0.20 m al 95 % del Proctor modificado | m³ | 5.81 |
@@ -116,7 +116,7 @@ Las cantidades de concreto y acero incluyen 5 % de desperdicio.
 4. **Falta el plano EST-01** (EST-02 es la hoja 2 de 2). Sin él no se puede cuantificar la estructura general: cimentación, columnas, vigas, placas y escaleras.
 5. **El ascensor no está modelado en Revit.** Hay que coordinar la ubicación del ducto y validar el foso con el proveedor: profundidad útil de 1.20 m y luz de 1.50 × 1.90 m.
 6. **Dudas del EST-02 para el calculista:**
-   - Resuelto: las columnas llevan 4 #4 cada una (L = 1.80 m) y el fleje mide L = 1.48 m.
+   - Resuelto: las columnas llevan 4 #4 cada una (L = 1.80 m) y el fleje mide L = 1.50 m.
    - Formas: los verticales de muro y de columna rematan arriba con gancho a 180° (retorno de 0.20 m) y abajo con pata a 90° de 0.20 m. Las barras de losa llevan gancho a 180° en ambos extremos.
    - La lámina no indica f'c, fy ni si el perfil es HEA o HEB.
    - El rótulo dice "TANQUE ALMACENAMIENTO".

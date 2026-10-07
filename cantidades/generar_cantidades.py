@@ -349,7 +349,7 @@ DESP = [
     ("Muros sentido X — verticales", "#4", 0.20, f"={G['luzX']}", None, 2, 1.75, "Cortes: recto 1.28 + gancho sup. 180° de 0.20 + pata inf. 90° de 0.20, L=1.75"),
     ("Muros sentido Y — verticales", "#4", 0.20, f"={G['luzY']}", None, 2, 1.75, "Cortes: recto 1.28 + gancho sup. 180° de 0.20 + pata inf. 90° de 0.20, L=1.75"),
     ("Columnas 40×40 — longitudinal", "#4", None, None, 4, 4, 1.80, "Confirmado: 4 #4 por columna, recto 1.32 + gancho sup. 180° de 0.20 + pata inf. 90° de 0.20, L=1.80"),
-    ("Columnas 40×40 — flejes cerrados", "#3", 0.075, f"={G['H']}", None, 4, 1.48, "Confirmado: fleje #3 @0.075 L=1.48"),
+    ("Columnas 40×40 — flejes cerrados", "#3", 0.075, f"={G['H']}", None, 4, 1.50, "Confirmado: fleje #3 @0.075 L=1.50"),
 ]
 d0 = r + 1
 for name, bar, sep, dist, nfix, mult, L, src in DESP:
@@ -499,7 +499,7 @@ item("2.6", "Acero de refuerzo #4 (1/2\")",
      "longitudinal de columnas 4 #4 por columna. Figurado según cartilla (hoja Foso ascensor).",
      "kg", total=f"={FOS}K{FC['k4']}*(1+{SREF['desp_acero']})", src="E/D", obs="Incluye desperdicio.")
 item("2.7", "Acero de refuerzo #3 (3/8\") — flejes",
-     "Acero corrugado fy = 420 MPa, NTC 2289. Flejes cerrados #3 @0.075 m, L = 1.48 m, gancho a 135°.",
+     "Acero corrugado fy = 420 MPa, NTC 2289. Flejes cerrados #3 @0.075 m, L = 1.50 m, gancho a 135°.",
      "kg", total=f"={FOS}K{FC['k3']}*(1+{SREF['desp_acero']})", src="E/D", obs="Incluye desperdicio.")
 item("2.8", "Formaleta para muros y columnas del foso",
      "Formaleta metálica o en madera cepillada, con desmoldante. Ambas caras de muros + caras exteriores de columnas.",
@@ -715,7 +715,7 @@ OBS = [
      "Coordinar la ubicación del ducto en planta arquitectónica y la ficha del proveedor (foso útil 1.20 m, luz 1.50 × 1.90 m)."),
     ("Resuelto", "Columnas 40×40: confirmado 4 #4 por columna (16 barras en total). Longitud total confirmada L=1.80 m.",
      "Confirmado por el arquitecto."),
-    ("Resuelto", "Flejes: confirmado fleje #3 @0.075 con L=1.48 m (80 flejes en total).",
+    ("Resuelto", "Flejes: confirmado fleje #3 @0.075 con L=1.50 m (80 flejes en total).",
      "Confirmado por el arquitecto."),
     ("Resuelto", "Longitudes: L=2.20/2.60 son las barras de losa (ganchos a 180°) y L=2.10/2.50 las horizontales de muro (patas a 90°). Son barras distintas, no hay inconsistencia.",
      "Ninguna."),
