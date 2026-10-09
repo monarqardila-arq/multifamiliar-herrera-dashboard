@@ -344,12 +344,12 @@ hdr(FO, r, ["Elemento / posición", "Barra", "Separación (m)", "Long. a distrib
 DESP = [
     ("Losa fondo — barras sentido X (corto)", "#4", 0.20, 2.08, None, 2, 2.20, "Corte A-A: recto 1.70 + gancho 180° de 0.20 en cada extremo, L=2.20 (doble parrilla)"),
     ("Losa fondo — barras sentido Y (largo)", "#4", 0.20, 1.68, None, 2, 2.60, "Corte B-B: recto 2.10 + gancho 180° de 0.20 en cada extremo, L=2.60 (doble parrilla)"),
-    ("Muros sentido X — horizontales", "#4", 0.20, f"={G['hm']}", None, 2, 2.10, "Planta refuerzo: recto 1.68 + patas a 90° de 0.20, L=2.10"),
-    ("Muros sentido Y — horizontales", "#4", 0.20, f"={G['hm']}", None, 2, 2.50, "Planta refuerzo: recto 2.08 + patas a 90° de 0.20, L=2.50"),
+    ("Muros sentido X — horizontales", "#4", 0.20, f"={G['hm']}", 7, 2, 2.10, "Planta refuerzo: recto 1.68 + patas a 90° de 0.20, L=2.10"),
+    ("Muros sentido Y — horizontales", "#4", 0.20, f"={G['hm']}", 7, 2, 2.50, "Planta refuerzo: recto 2.08 + patas a 90° de 0.20, L=2.50"),
     ("Muros sentido X — verticales", "#4", 0.20, f"={G['luzX']}", None, 2, 1.75, "Cortes: recto 1.28 + gancho sup. 180° de 0.20 + pata inf. 90° de 0.20, L=1.75"),
     ("Muros sentido Y — verticales", "#4", 0.20, f"={G['luzY']}", None, 2, 1.75, "Cortes: recto 1.28 + gancho sup. 180° de 0.20 + pata inf. 90° de 0.20, L=1.75"),
     ("Columnas 40×40 — longitudinal", "#4", None, None, 4, 4, 1.80, "Confirmado: 4 #4 por columna, recto 1.32 + gancho sup. 180° de 0.20 + pata inf. 90° de 0.20, L=1.80"),
-    ("Columnas 40×40 — flejes cerrados", "#3", 0.075, f"={G['H']}", None, 4, 1.50, "Confirmado: fleje #3 @0.075 L=1.50"),
+    ("Columnas 40×40 — flejes cerrados", "#3", 0.075, f"={G['hm']}", None, 4, 1.50, "Revisión de obra: fleje #3 @0.075 en 1.20 m sobre la losa, 16 por columna, L=1.50"),
 ]
 d0 = r + 1
 for name, bar, sep, dist, nfix, mult, L, src in DESP:
@@ -360,7 +360,7 @@ for name, bar, sep, dist, nfix, mult, L, src in DESP:
     if nfix is not None:
         put(FO, f"E{r}", nfix, BLUE, N0)
     else:
-        put(FO, f"E{r}", f"=ROUNDUP(D{r}/C{r},0)+1", fmt=N0)
+        put(FO, f"E{r}", f"=ROUNDUP(D{r}/C{r},0)", fmt=N0)
     put(FO, f"F{r}", mult, BLUE, N0)
     put(FO, f"G{r}", f"=E{r}*F{r}", fmt=N0)
     put(FO, f"H{r}", L, BLUE, "0.00")

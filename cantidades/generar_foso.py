@@ -24,9 +24,9 @@ CARTILLA = [
      "Recta con gancho a 180° en ambos extremos", "1.70 + 2 × 0.20", ("H2", 1.70, 0.20)),
     ("L2", "Losa de fondo — sentido Y (2 capas)", "#4", 0.20, 1.68, None, 2, 2.60,
      "Recta con gancho a 180° en ambos extremos", "2.10 + 2 × 0.20", ("H2", 2.10, 0.20)),
-    ("M1", "Muros X — horizontales (2 muros)", "#4", 0.20, 1.20, None, 2, 2.10,
+    ("M1", "Muros X — horizontales (2 muros)", "#4", 0.20, 1.20, 7, 2, 2.10,
      "En U, patas a 90°", "1.68 + 2 × 0.20", ("U", 1.68, 0.20)),
-    ("M2", "Muros Y — horizontales (2 muros)", "#4", 0.20, 1.20, None, 2, 2.50,
+    ("M2", "Muros Y — horizontales (2 muros)", "#4", 0.20, 1.20, 7, 2, 2.50,
      "En U, patas a 90°", "2.08 + 2 × 0.20", ("U", 2.08, 0.20)),
     ("M3", "Muros X — verticales (2 muros)", "#4", 0.20, 1.30, None, 2, 1.75,
      "Gancho sup. 180°, pata inf. 90°", "1.28 + 0.20 + 0.20", ("HL", 1.28, 0.20)),
@@ -34,7 +34,7 @@ CARTILLA = [
      "Gancho sup. 180°, pata inf. 90°", "1.28 + 0.20 + 0.20", ("HL", 1.28, 0.20)),
     ("C1", "Columnas 40×40 — longitudinal (4 col.)", "#4", None, None, 4, 4, 1.80,
      "Gancho sup. 180°, pata inf. 90°", "1.32 + 0.20 + 0.20", ("HL", 1.32, 0.20)),
-    ("E1", "Columnas 40×40 — flejes (4 col.)", "#3", 0.075, 1.40, None, 4, 1.50,
+    ("E1", "Columnas 40×40 — flejes (4 col.)", "#3", 0.075, 1.20, None, 4, 1.50,
      "Fleje cerrado 0.32 × 0.32, ganchos 135°", "4 × 0.32 + ganchos", ("F", 0.32, 0.32)),
 ]
 
@@ -50,7 +50,8 @@ SOLADO = ("Solado de limpieza e = 0.05 (14 MPa, recomendado)", 1, 2.40, 2.00, 0.
 
 
 def nbarras(sep, dist, nfix):
-    return nfix if nfix is not None else math.ceil(round(dist / sep, 6)) + 1
+    # Revisión de obra: sin barra adicional en los extremos (allí ya hay barra de columna o de borde)
+    return nfix if nfix is not None else math.ceil(round(dist / sep, 6))
 
 
 rows = []
@@ -138,16 +139,15 @@ sol_v = sol[1] * sol[2] * sol[3] * sol[4]
 VARILLA = 6.00
 # Patrón, barra, n° de varillas, piezas [(marca, L)], uso sugerido del retal
 PLAN = [
-    ("A", "#4", 14, [("M2", 2.50), ("M4", 1.75), ("M4", 1.75)], "Sin retal"),
-    ("B", "#4", 8, [("L1", 2.20), ("C1", 1.80), ("C1", 1.80)], "Chatarra"),
-    ("C", "#4", 7, [("M1", 2.10), ("M1", 2.10), ("M3", 1.75)], "Chatarra"),
-    ("D", "#4", 10, [("L2", 2.60), ("L2", 2.60)], "Silletas para la parrilla superior de la losa (1 por retal)"),
-    ("E", "#4", 8, [("L1", 2.20), ("L1", 2.20)], "Estacas de formaleta y de replanteo (3 de 0.50 m por retal)"),
-    ("F", "#4", 1, [("M3", 1.75)], "Reserva para reponer una pieza mal cortada"),
-    ("G", "#3", 20, [("E1", 1.50)] * 4, "Sin retal"),
+    ("A", "#4", 14, [("M2", 2.50), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Sin retal"),
+    ("B", "#4", 15, [("L2", 2.60), ("L1", 2.20)], "Silletas para la parrilla superior (1 por retal)"),
+    ("C", "#4", 7, [("M1", 2.10), ("M1", 2.10), ("C1", 1.80)], "Sin retal"),
+    ("D", "#4", 4, [("L1", 2.20), ("C1", 1.80), ("C1", 1.80)], "Chatarra"),
+    ("E", "#4", 3, [("L2", 2.60), ("M3/M4", 1.75)], "Estacas de formaleta y replanteo"),
+    ("F", "#4", 1, [("L1", 2.20), ("C1", 1.80), ("M3/M4", 1.75)], "Chatarra"),
+    ("G", "#4", 1, [("L1", 2.20), ("L1", 2.20)], "Reserva para reponer una pieza"),
+    ("H", "#3", 16, [("E1", 1.50)] * 4, "Sin retal"),
 ]
-# Las 1.75 m se reparten así: M4 = 14 × 2 = 28 piezas, pero M4 solo tiene 20 → 8 de ellas son M3.
-PLAN[0] = ("A", "#4", 14, [("M2", 2.50), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Sin retal")
 _need = {}
 for m, el, bar, sep, dist, nfix, mult, L, *_ in CARTILLA:
     _need[(bar, L)] = _need.get((bar, L), 0) + nbarras(sep, dist, nfix) * mult
@@ -203,18 +203,18 @@ INV_USO = [
     (89, 3.11, 'Con ganchos a 180° de 20 cm', 'L2', 2.60),
     (90, 2.39, '—', 'L1', 2.20),
 ]
-# Varillas nuevas de 6 m para lo que no sale del inventario (mínimo exacto: 34 #4)
+# Varillas nuevas de 6 m para lo que no sale del inventario (mínimo exacto: 31 #4)
 PLAN_INV = [
     ("A", "#4", 11, [("M2", 2.50), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Sin retal"),
     ("B", "#4", 6, [("M1", 2.10), ("M1", 2.10), ("C1", 1.80)], "Sin retal"),
-    ("C", "#4", 5, [("L2", 2.60), ("L2", 2.60)], "Estacas de formaleta"),
-    ("D", "#4", 4, [("L1", 2.20), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Chatarra"),
-    ("E", "#4", 3, [("L2", 2.60), ("L1", 2.20)], "Estacas de formaleta y replanteo"),
+    ("C", "#4", 4, [("L2", 2.60), ("L2", 2.60)], "Estacas de formaleta"),
+    ("D", "#4", 3, [("L2", 2.60), ("L1", 2.20)], "Estacas de formaleta y replanteo"),
+    ("E", "#4", 2, [("L1", 2.20), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Chatarra"),
     ("F", "#4", 2, [("L1", 2.20), ("C1", 1.80), ("C1", 1.80)], "Chatarra"),
     ("G", "#4", 1, [("L2", 2.60), ("M3/M4", 1.75)], "Reserva para reponer una pieza"),
     ("H", "#4", 1, [("L2", 2.60), ("M1", 2.10)], "Estacas de formaleta"),
     ("I", "#4", 1, [("L1", 2.20), ("C1", 1.80), ("M3/M4", 1.75)], "Chatarra"),
-    ("J", "#3", 20, [("E1", 1.50)] * 4, "Sin retal"),
+    ("J", "#3", 16, [("E1", 1.50)] * 4, "Sin retal"),
 ]
 _got = {}
 for _, L, _, uso, Lc in INV_USO:
@@ -370,7 +370,7 @@ h2.c2 {{ break-before: page; }}
 </tbody>
 </table>
 <ul class="notas">
-  <li>N° de barras = longitud a distribuir ÷ separación, redondeado hacia arriba, + 1. Losa X: 2.08 m; losa Y: 1.68 m; filas de muro: 1.20 m; flejes: 1.40 m.</li>
+  <li>N° de barras = longitud a distribuir ÷ separación, redondeado hacia arriba, sin barra adicional en los extremos (revisión de obra). Losa X: 2.08 m → 11; losa Y: 1.68 m → 9; verticales muro X: 1.30 m → 7; muro Y: 1.70 m → 9; flejes: 1.20 m sobre la losa → 16. Las horizontales de muro son 7 filas en 1.20 m (arriba y abajo).</li>
   <li>L corte es la longitud indicada en el plano. Es mayor que la suma de los tramos porque incluye el doblez de los ganchos.</li>
   <li>Las patas de los verticales de muro (0.20 m) entran a la losa entre las dos capas. La pata inferior de las columnas va hacia afuera.</li>
   <li>Recubrimientos según EST-02: 0.05 m en la losa, 0.062 y 0.075 m en los muros.</li>
@@ -529,7 +529,7 @@ for barra, nombre in (("#4", 'ML DE ACERO #4 (1/2") — CARTILLA'), ("#3", 'ML D
     r0 = r
     for m, el, bar, sep, dist, nfix, mult, L, forma, tramos, _ in CARTILLA:
         if bar != barra: continue
-        cant = f"=(ROUNDUP({dist}/{sep},0)+1)*{mult}" if nfix is None else f"={nfix}*{mult}"
+        cant = f"=ROUNDUP({dist}/{sep},0)*{mult}" if nfix is None else f"={nfix}*{mult}"
         fila(r, [f"{m} — {el}", tramos, sep if sep else "—", cant, L, f"=F{r}*G{r}"],
              [None, None, "0.000", "0", "0.00", "0.00"], inputs="EG")
         r += 1
