@@ -14,6 +14,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 
 HTML_OUT, XLSX_OUT = sys.argv[1], sys.argv[2]
+PLAN_OUT = sys.argv[3] if len(sys.argv) > 3 else None
 
 DESP_ACERO = 0.05
 DESP_CONC = 0.05
@@ -370,6 +371,34 @@ h2.c2 {{ break-before: page; }}
 </table>
 </body></html>"""
 open(HTML_OUT, "w").write(HTML)
+
+# Plan de corte en documento aparte: solo tablas
+_head = HTML[:HTML.index("</style></head><body>")].replace(
+    "<title>Foso de ascensor — cartilla de acero y concreto</title>", "<title>Foso de ascensor — plan de corte</title>")
+PLAN_DOC = _head + f"""</style></head><body>
+<h1>FOSO DE ASCENSOR — PLAN DE CORTE DE VARILLAS</h1>
+
+<h2>1. Cortes de varillas de 1/2" del inventario de obra</h2>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px">
+<table>{INV_HEAD}<tbody>{inv_rows_html(INV_USO[:half])}</tbody></table>
+<table>{INV_HEAD}<tbody>{inv_rows_html(INV_USO[half:])}</tbody></table>
+</div>
+<table style="margin-top:6px"><tbody>
+<tr class="tot"><td>Total del inventario: {len(INV_PZ)} piezas + {N_SIL} silletas</td><td class="r">{n2(INV_ML)} m</td></tr>
+</tbody></table>
+
+<h2 class="c2">2. Cortes de varillas nuevas de 6.00 m</h2>
+<table>
+<thead><tr><th>Patrón</th><th>Barra</th><th class="r">Varillas</th><th>Cortes en cada varilla de 6.00 m (marca y longitud)</th>
+<th class="r">Retal c/u (m)</th><th class="r">Retal total (m)</th><th>Uso del retal</th></tr></thead>
+<tbody>{plan_rows_html(PLAN_INV)}
+<tr class="tot"><td colspan="2">Total #4 (1/2")</td><td class="r">{VAR_INV['#4']}</td><td colspan="4"></td></tr>
+<tr class="tot"><td colspan="2">Total #3 (3/8")</td><td class="r">{VAR_INV['#3']}</td><td colspan="4"></td></tr>
+</tbody>
+</table>
+</body></html>"""
+if PLAN_OUT:
+    open(PLAN_OUT, "w").write(PLAN_DOC)
 
 # ------------------------------------------------------------------ EXCEL
 F = "Arial"
