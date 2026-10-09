@@ -47,7 +47,7 @@ CONCRETO = [
     ("Muros sentido Y e = 0.15", 2, 1.70, 0.15, 1.20, 0, "Entre caras de columnas, sobre la losa (N-1.30 a N-0.10)"),
     ("Columnas 40 × 40", 4, 0.40, 0.40, 1.40, 0, "Altura completa N-1.50 a N-0.10"),
 ]
-SOLADO = ("Solado de limpieza e = 0.05 (14 MPa, recomendado)", 1, 2.40, 2.00, 0.05)
+SOLADO = ("Solado de limpieza e = 0.05 (14 MPa, recomendado)", 1, 2.70, 2.30, 0.05)
 
 
 def nbarras(sep, dist, nfix):
@@ -683,7 +683,7 @@ cell(K, f"A{r}", SOLADO[0]); cell(K, f"B{r}", SOLADO[1], BLUE, "0")
 cell(K, f"C{r}", SOLADO[2], BLUE, "0.00"); cell(K, f"D{r}", SOLADO[3], BLUE, "0.00"); cell(K, f"E{r}", SOLADO[4], BLUE, "0.00")
 cell(K, f"F{r}", f"=C{r}*D{r}*E{r}", fmt="0.000"); cell(K, f"G{r}", 0, fmt='0.000;-0.000;"-"')
 cell(K, f"H{r}", f"=B{r}*F{r}", BOLD, "0.000"); cell(K, f"I{r}", f"=H{r}*(1+{DC})", fmt="0.000")
-cell(K, f"J{r}", "No dibujado en EST-02. Losa + 0.10 m por lado. Va aparte del concreto estructural.")
+cell(K, f"J{r}", "No dibujado en EST-02. Huella con columnas (2.50 × 2.10) + 0.10 m por lado. Va aparte del concreto estructural.")
 
 # Resumen
 R = wb.create_sheet("Resumen", 0)

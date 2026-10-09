@@ -285,8 +285,8 @@ put(FO, f"B{r}", f"=(2*{G['luzX']}+2*{G['luzY']})*{G['hm']}*{G['e']}", fmt=N3); 
 put(FO, f"D{r}", "(2×1.30 + 2×1.70) × 1.20 × 0.15"); FC["muro"] = r
 r += 1
 put(FO, f"A{r}", "Solado de limpieza (concreto pobre)")
-put(FO, f"B{r}", f"=({G['LX']}+2*{SREF['sob_solado']})*({G['LY']}+2*{SREF['sob_solado']})*{SREF['e_solado']}", fmt=N3)
-put(FO, f"C{r}", "m³"); put(FO, f"D{r}", "(1.80+0.20) × (2.20+0.20) × 0.05 — recomendado"); FC["solado"] = r
+put(FO, f"B{r}", f"=({G['TX']}+2*{SREF['sob_solado']})*({G['TY']}+2*{SREF['sob_solado']})*{SREF['e_solado']}", fmt=N3)
+put(FO, f"C{r}", "m³"); put(FO, f"D{r}", "(2.10+0.20) × (2.50+0.20) × 0.05: bajo losa y columnas — recomendado"); FC["solado"] = r
 r += 1
 put(FO, f"A{r}", "TOTAL CONCRETO ESTRUCTURAL (sin desperdicio)", BOLD, fill=TOTFILL)
 put(FO, f"B{r}", f"=B{FC['col']}+B{FC['losa']}+B{FC['muro']}", BOLD, N3, TOTFILL); put(FO, f"C{r}", "m³", fill=TOTFILL)
