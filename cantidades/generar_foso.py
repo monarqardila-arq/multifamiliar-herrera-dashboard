@@ -15,6 +15,7 @@ from openpyxl.utils import get_column_letter
 
 HTML_OUT, XLSX_OUT = sys.argv[1], sys.argv[2]
 PLAN_OUT = sys.argv[3] if len(sys.argv) > 3 else None
+FALTA_OUT = sys.argv[4] if len(sys.argv) > 4 else None
 
 DESP_ACERO = 0.05
 DESP_CONC = 0.05
@@ -430,6 +431,58 @@ PLAN_DOC = _head + f"""</style></head><body>
 </body></html>"""
 if PLAN_OUT:
     open(PLAN_OUT, "w").write(PLAN_DOC)
+
+# Acero faltante descontando el inventario: solo tablas
+_inv_m = {}
+for _, _, _, uso, _ in INV_USO:
+    _inv_m[uso] = _inv_m.get(uso, 0) + 1
+_frows, _tot = [], {}
+for m, el, bar, sep, dist, nfix, mult, L, *_ in CARTILLA:
+    req = nbarras(sep, dist, nfix) * mult
+    inv = _inv_m.get(m, 0)
+    fal = req - inv
+    t = _tot.setdefault(bar, [0, 0, 0, 0.0])
+    t[0] += req; t[1] += inv; t[2] += fal; t[3] += fal * L
+    _frows.append(f'<tr><td class="c b">{m}</td><td>{USO_TXT[m].split(" · ", 1)[1]}</td><td class="c">{bar}</td>'
+                  f'<td class="r">{L:.2f}</td><td class="r">{req}</td><td class="r">{inv}</td>'
+                  f'<td class="r b">{fal}</td><td class="r b">{n2(fal * L)}</td></tr>')
+_nb = _inv_m.get("Burrito", 0)
+_frows.insert(len(_frows) - 1, f'<tr><td class="c b">—</td><td>{USO_TXT["Burrito"].split(" · ", 1)[1]} (burrito)</td><td class="c">#4</td>'
+              f'<td class="r">0.75</td><td class="r">{_nb}</td><td class="r">{_nb}</td><td class="r b">0</td><td class="r b">0.00</td></tr>')
+_ftot = "".join(
+    f'<tr class="tot"><td colspan="4">Total {b} ({"1/2" if b == "#4" else "3/8"}")</td><td class="r">{t[0]}</td>'
+    f'<td class="r">{t[1]}</td><td class="r">{t[2]}</td><td class="r">{n2(t[3])}</td></tr>'
+    for b, t in _tot.items())
+_compra = "".join(
+    f'<tr><td class="c b">{b}</td><td>{"1/2" if b == "#4" else "3/8"}"</td><td class="r">{n2(_tot[b][3])}</td>'
+    f'<td class="r">{VAR_INV[b]}</td><td class="r">{n2(VAR_INV[b] * VARILLA)}</td>'
+    f'<td class="r">{n2(VAR_INV[b] * VARILLA - _tot[b][3])}</td><td class="r">{1 if b == "#3" else 0}</td>'
+    f'<td class="r b">{VAR_INV[b] + (1 if b == "#3" else 0)}</td></tr>'
+    for b in ("#4", "#3"))
+_tot_ped = VAR_INV["#4"] + VAR_INV["#3"] + 1
+FALTA_DOC = _head.replace("Foso de ascensor — plan de corte", "Foso de ascensor — acero faltante") + f"""</style></head><body>
+<h1>FOSO DE ASCENSOR — ACERO FALTANTE DESCONTANDO EL INVENTARIO</h1>
+
+<h2>1. Piezas que faltan</h2>
+<table>
+<thead><tr><th>Marca</th><th>Uso</th><th>Barra</th><th class="r">L corte (m)</th><th class="r">Requeridas</th>
+<th class="r">Del inventario</th><th class="r">Faltan</th><th class="r">ml faltantes</th></tr></thead>
+<tbody>{"".join(_frows)}
+{_ftot}
+</tbody>
+</table>
+
+<h2>2. Varillas de 6.00 m a comprar</h2>
+<table>
+<thead><tr><th>Barra</th><th>Diámetro</th><th class="r">ml faltantes</th><th class="r">Varillas (plan de corte)</th>
+<th class="r">ml comprados</th><th class="r">Retal (m)</th><th class="r">Reserva</th><th class="r">Total a pedir</th></tr></thead>
+<tbody>{_compra}
+<tr class="tot"><td colspan="7">Total varillas a pedir</td><td class="r">{_tot_ped}</td></tr>
+</tbody>
+</table>
+</body></html>"""
+if FALTA_OUT:
+    open(FALTA_OUT, "w").write(FALTA_DOC)
 
 # ------------------------------------------------------------------ EXCEL
 F = "Arial"
