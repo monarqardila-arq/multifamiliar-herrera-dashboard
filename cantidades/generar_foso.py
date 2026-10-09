@@ -141,7 +141,7 @@ VARILLA = 6.00
 # Patrón, barra, n° de varillas, piezas [(marca, L)], uso sugerido del retal
 PLAN = [
     ("A", "#4", 14, [("M2", 2.50), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Sin retal"),
-    ("B", "#4", 15, [("L2", 2.60), ("L1", 2.20)], "Silletas para la parrilla superior (1 por retal)"),
+    ("B", "#4", 15, [("L2", 2.60), ("L1", 2.20)], "Burritos para la parrilla superior (1 por retal)"),
     ("C", "#4", 7, [("M1", 2.10), ("M1", 2.10), ("C1", 1.80)], "Sin retal"),
     ("D", "#4", 4, [("L1", 2.20), ("C1", 1.80), ("C1", 1.80)], "Chatarra"),
     ("E", "#4", 3, [("L2", 2.60), ("M3/M4", 1.75)], "Estacas de formaleta y replanteo"),
@@ -163,14 +163,14 @@ VAR = {b: sum(nv for _, bb, nv, _, _ in PLAN if bb == b) for b in ("#4", "#3")}
 # ------------------------------------------------------------------ INVENTARIO DE OBRA (varilla de 1/2")
 # Fila en la hoja "INVENTARIO DE OBRA", longitud en inventario (m), detalle, uso en el foso, longitud a cortar (m)
 INV_USO = [
-    (30, 1.05, 'Con gancho de 0.20 m', 'Silleta', 0.75),
+    (30, 1.05, 'Con gancho de 0.20 m', 'Burrito', 0.75),
     (31, 1.765, '—', 'M3/M4', 1.75),
     (32, 1.765, '—', 'M3/M4', 1.75),
-    (35, 1.047, 'Con gancho de 0.20 m', 'Silleta', 0.75),
-    (36, 1.062, 'Con gancho de 0.195 m', 'Silleta', 0.75),
-    (39, 1.06, 'Con gancho de 0.195 m', 'Silleta', 0.75),
-    (40, 0.777, '—', 'Silleta', 0.75),
-    (41, 0.767, '—', 'Silleta', 0.75),
+    (35, 1.047, 'Con gancho de 0.20 m', 'Burrito', 0.75),
+    (36, 1.062, 'Con gancho de 0.195 m', 'Burrito', 0.75),
+    (39, 1.06, 'Con gancho de 0.195 m', 'Burrito', 0.75),
+    (40, 0.777, '—', 'Burrito', 0.75),
+    (41, 0.767, '—', 'Burrito', 0.75),
     (45, 3.55, 'Con patas de 0.20 m a cada lado', 'L2', 2.60),
     (49, 2.29, 'Con ganchos a 180° de 20.4 cm', 'M3/M4', 1.75),
     (50, 2.265, 'Con ganchos a 160° de 20.2 cm', 'M3/M4', 1.75),
@@ -193,8 +193,8 @@ INV_USO = [
     (71, 2.335, '—', 'L1', 2.20),
     (72, 2.328, '—', 'L1', 2.20),
     (73, 1.87, '—', 'C1', 1.80),
-    (78, 0.932, '—', 'Silleta', 0.75),
-    (80, 0.943, '—', 'Silleta', 0.75),
+    (78, 0.932, '—', 'Burrito', 0.75),
+    (80, 0.943, '—', 'Burrito', 0.75),
     (81, 2.392, '—', 'L1', 2.20),
     (82, 2.372, '—', 'L1', 2.20),
     (83, 2.467, '—', 'L1', 2.20),
@@ -220,7 +220,7 @@ PLAN_INV = [
 _got = {}
 for _, L, _, uso, Lc in INV_USO:
     assert Lc <= L + 1e-9
-    if uso != "Silleta":
+    if uso != "Burrito":
         _got[("#4", Lc)] = _got.get(("#4", Lc), 0) + 1
 for pat, bar, nv, pcs, uso in PLAN_INV:
     assert sum(L for _, L in pcs) <= VARILLA + 1e-9, pat
@@ -228,8 +228,8 @@ for pat, bar, nv, pcs, uso in PLAN_INV:
         _got[(bar, L)] = _got.get((bar, L), 0) + nv
 assert _got == _need, (_got, _need)
 VAR_INV = {b: sum(nv for _, bb, nv, _, _ in PLAN_INV if bb == b) for b in ("#4", "#3")}
-N_SIL = sum(1 for x in INV_USO if x[3] == "Silleta")
-INV_PZ = [x for x in INV_USO if x[3] != "Silleta"]
+N_SIL = sum(1 for x in INV_USO if x[3] == "Burrito")
+INV_PZ = [x for x in INV_USO if x[3] != "Burrito"]
 INV_ML = sum(x[4] for x in INV_USO)
 
 
@@ -270,7 +270,7 @@ ret_inv = VAR_INV["#4"] * VARILLA - sum(nv * sum(L for _, L in pcs) for _, b, nv
 PLAN_HTML = f"""
 <h2 class="c2">3. Aprovechamiento del inventario de varilla de 1/2"</h2>
 <div class="res">
-  <div><b>{len(INV_PZ)} piezas</b><span>del foso salen del inventario de obra, más {N_SIL} silletas</span></div>
+  <div><b>{len(INV_PZ)} piezas</b><span>del foso salen del inventario de obra, más {N_SIL} burritos</span></div>
   <div><b>{n2(INV_ML)} m</b><span>de varilla de 1/2" del inventario que se usan</span></div>
   <div><b>{VAR['#4'] - VAR_INV['#4']} varillas</b><span>#4 de 6 m que se dejan de comprar (de {VAR['#4']} a {VAR_INV['#4']})</span></div>
   <div><b>0</b><span>Varilla #3 en inventario: los flejes se compran completos</span></div>
@@ -299,7 +299,7 @@ PLAN_HTML = f"""
 </table>
 <ul class="notas">
   <li>{VAR_INV['#4']} varillas #4 es el mínimo exacto para las piezas que faltan. Sin usar el inventario serían {VAR['#4']}.</li>
-  <li>Las silletas ya salen del inventario, así que los retales de 0.80 y 1.20 m quedan para estacas de formaleta y replanteo.</li>
+  <li>Los burritos ya salen del inventario, así que los retales de 0.80 y 1.20 m quedan para estacas de formaleta y replanteo.</li>
   <li>Cortar primero las piezas largas de cada varilla y marcar cada pieza con su marca (L1, M2…) antes de figurar.</li>
 </ul>
 """
@@ -384,7 +384,7 @@ PLAN_DOC = _head + f"""</style></head><body>
 <table>{INV_HEAD}<tbody>{inv_rows_html(INV_USO[half:])}</tbody></table>
 </div>
 <table style="margin-top:6px"><tbody>
-<tr class="tot"><td>Total del inventario: {len(INV_PZ)} piezas + {N_SIL} silletas</td><td class="r">{n2(INV_ML)} m</td></tr>
+<tr class="tot"><td>Total del inventario: {len(INV_PZ)} piezas + {N_SIL} burritos</td><td class="r">{n2(INV_ML)} m</td></tr>
 </tbody></table>
 
 <h2 class="c2">2. Cortes de varillas nuevas de 6.00 m</h2>
@@ -574,7 +574,7 @@ for k, (L, n, el) in DEM4.items():
     fila(r, [nombre, L, n, f'=COUNTIF($E${i0}:$E${i1},"{k}")', f"=E{r}-F{r}", f"=G{r}*D{r}"],
          [None, "0.00", "0", "0", "0", "0.00"])
     r += 1
-fila(r, ["Silletas para la parrilla superior de la losa", 0.75, N_SIL, f'=COUNTIF($E${i0}:$E${i1},"Silleta")',
+fila(r, ["Burritos para la parrilla superior de la losa", 0.75, N_SIL, f'=COUNTIF($E${i0}:$E${i1},"Burrito")',
          f"=E{r}-F{r}", f"=G{r}*D{r}"], [None, "0.00", "0", "0", "0", "0.00"])
 r += 1
 total(r, "TOTAL", f"=SUM(H{p0}:H{r-1})",
