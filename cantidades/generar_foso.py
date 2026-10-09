@@ -159,6 +159,78 @@ for pat, bar, nv, pcs, uso in PLAN:
 assert _got == _need, (_got, _need)
 VAR = {b: sum(nv for _, bb, nv, _, _ in PLAN if bb == b) for b in ("#4", "#3")}
 
+# ------------------------------------------------------------------ INVENTARIO DE OBRA (varilla de 1/2")
+# Fila en la hoja "INVENTARIO DE OBRA", longitud en inventario (m), detalle, uso en el foso, longitud a cortar (m)
+INV_USO = [
+    (30, 1.05, 'Con gancho de 0.20 m', 'Silleta', 0.75),
+    (31, 1.765, '—', 'M3/M4', 1.75),
+    (32, 1.765, '—', 'M3/M4', 1.75),
+    (35, 1.047, 'Con gancho de 0.20 m', 'Silleta', 0.75),
+    (36, 1.062, 'Con gancho de 0.195 m', 'Silleta', 0.75),
+    (39, 1.06, 'Con gancho de 0.195 m', 'Silleta', 0.75),
+    (40, 0.777, '—', 'Silleta', 0.75),
+    (41, 0.767, '—', 'Silleta', 0.75),
+    (45, 3.55, 'Con patas de 0.20 m a cada lado', 'L2', 2.60),
+    (49, 2.29, 'Con ganchos a 180° de 20.4 cm', 'M3/M4', 1.75),
+    (50, 2.265, 'Con ganchos a 160° de 20.2 cm', 'M3/M4', 1.75),
+    (54, 2.04, '—', 'C1', 1.80),
+    (55, 2.705, '—', 'L2', 2.60),
+    (56, 2.352, 'Con pata de 20 cm a un lado', 'M1', 2.10),
+    (57, 2.415, '—', 'L1', 2.20),
+    (58, 2.33, '—', 'L1', 2.20),
+    (59, 1.943, '—', 'C1', 1.80),
+    (61, 1.874, '—', 'C1', 1.80),
+    (62, 2.267, '—', 'L1', 2.20),
+    (63, 2.393, '—', 'L1', 2.20),
+    (64, 2.322, '—', 'L1', 2.20),
+    (65, 2.724, '—', 'L2', 2.60),
+    (66, 2.705, '—', 'L2', 2.60),
+    (67, 2.387, '—', 'L1', 2.20),
+    (68, 2.371, '—', 'L1', 2.20),
+    (69, 2.335, '—', 'L1', 2.20),
+    (70, 1.878, '—', 'C1', 1.80),
+    (71, 2.335, '—', 'L1', 2.20),
+    (72, 2.328, '—', 'L1', 2.20),
+    (73, 1.87, '—', 'C1', 1.80),
+    (78, 0.932, '—', 'Silleta', 0.75),
+    (80, 0.943, '—', 'Silleta', 0.75),
+    (81, 2.392, '—', 'L1', 2.20),
+    (82, 2.372, '—', 'L1', 2.20),
+    (83, 2.467, '—', 'L1', 2.20),
+    (84, 2.582, '—', 'M2', 2.50),
+    (85, 2.52, '—', 'M2', 2.50),
+    (88, 3.095, 'Con ganchos a 180° de 20 cm', 'M2', 2.50),
+    (89, 3.11, 'Con ganchos a 180° de 20 cm', 'L2', 2.60),
+    (90, 2.39, '—', 'L1', 2.20),
+]
+# Varillas nuevas de 6 m para lo que no sale del inventario (mínimo exacto: 34 #4)
+PLAN_INV = [
+    ("A", "#4", 11, [("M2", 2.50), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Sin retal"),
+    ("B", "#4", 6, [("M1", 2.10), ("M1", 2.10), ("C1", 1.80)], "Sin retal"),
+    ("C", "#4", 5, [("L2", 2.60), ("L2", 2.60)], "Estacas de formaleta"),
+    ("D", "#4", 4, [("L1", 2.20), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Chatarra"),
+    ("E", "#4", 3, [("L2", 2.60), ("L1", 2.20)], "Estacas de formaleta y replanteo"),
+    ("F", "#4", 2, [("L1", 2.20), ("C1", 1.80), ("C1", 1.80)], "Chatarra"),
+    ("G", "#4", 1, [("L2", 2.60), ("M3/M4", 1.75)], "Reserva para reponer una pieza"),
+    ("H", "#4", 1, [("L2", 2.60), ("M1", 2.10)], "Estacas de formaleta"),
+    ("I", "#4", 1, [("L1", 2.20), ("C1", 1.80), ("M3/M4", 1.75)], "Chatarra"),
+    ("J", "#3", 20, [("E1", 1.50)] * 4, "Sin retal"),
+]
+_got = {}
+for _, L, _, uso, Lc in INV_USO:
+    assert Lc <= L + 1e-9
+    if uso != "Silleta":
+        _got[("#4", Lc)] = _got.get(("#4", Lc), 0) + 1
+for pat, bar, nv, pcs, uso in PLAN_INV:
+    assert sum(L for _, L in pcs) <= VARILLA + 1e-9, pat
+    for _, L in pcs:
+        _got[(bar, L)] = _got.get((bar, L), 0) + nv
+assert _got == _need, (_got, _need)
+VAR_INV = {b: sum(nv for _, bb, nv, _, _ in PLAN_INV if bb == b) for b in ("#4", "#3")}
+N_SIL = sum(1 for x in INV_USO if x[3] == "Silleta")
+INV_PZ = [x for x in INV_USO if x[3] != "Silleta"]
+INV_ML = sum(x[4] for x in INV_USO)
+
 
 def barra_svg(pcs, w=330, h=22):
     sc = (w - 2) / VARILLA
@@ -177,31 +249,57 @@ def barra_svg(pcs, w=330, h=22):
     return f'<svg viewBox="0 0 {w} {h}" class="bar6">' + "".join(out) + "</svg>"
 
 
-plan_rows = "".join(
-    f'<tr><td class="c b">{pat}</td><td class="c">{bar}</td><td class="r b">{nv}</td><td>{barra_svg(pcs)}</td>'
-    f'<td class="r">{VARILLA - sum(L for _, L in pcs):.2f}</td><td class="r">{nv*(VARILLA - sum(L for _, L in pcs)):.2f}</td><td>{uso}</td></tr>'
-    for pat, bar, nv, pcs, uso in PLAN)
-ret4 = VAR["#4"] * VARILLA - l4
+def plan_rows_html(plan):
+    return "".join(
+        f'<tr><td class="c b">{pat}</td><td class="c">{bar}</td><td class="r b">{nv}</td><td>{barra_svg(pcs)}</td>'
+        f'<td class="r">{VARILLA - sum(L for _, L in pcs):.2f}</td><td class="r">{nv*(VARILLA - sum(L for _, L in pcs)):.2f}</td><td>{uso}</td></tr>'
+        for pat, bar, nv, pcs, uso in plan)
+
+
+def inv_rows_html(items):
+    return "".join(
+        f'<tr><td class="c">{fila}</td><td class="r">{L:.3f}</td><td>{d}</td><td class="c b">{uso}</td><td class="r b">{Lc:.2f}</td></tr>'
+        for fila, L, d, uso, Lc in items)
+
+
+half = (len(INV_USO) + 1) // 2
+INV_HEAD = ('<thead><tr><th>Fila</th><th class="r">Long. (m)</th><th>Detalle en inventario</th>'
+            '<th>Uso</th><th class="r">Cortar (m)</th></tr></thead>')
+ret_inv = VAR_INV["#4"] * VARILLA - sum(nv * sum(L for _, L in pcs) for _, b, nv, pcs, _ in PLAN_INV if b == "#4")
 PLAN_HTML = f"""
-<h2 class="c2">3. Plan de corte en varillas comerciales de 6.00 m</h2>
+<h2 class="c2">3. Aprovechamiento del inventario de varilla de 1/2"</h2>
 <div class="res">
-  <div><b>{VAR['#4']} varillas</b><span>#4 (1/2") de 6 m, para {n2(l4)} ml de piezas</span></div>
-  <div><b>{VAR['#3']} varillas</b><span>#3 (3/8") de 6 m, para {n2(l3)} ml de piezas, sin retal</span></div>
-  <div><b>{n2(ret4)} ml</b><span>Retal total de #4 ({ret4/(VAR['#4']*VARILLA)*100:.1f} % de lo comprado)</span></div>
-  <div><b>{VAR['#4']+VAR['#3']} varillas</b><span>Total a pedir, sin reserva</span></div>
+  <div><b>{len(INV_PZ)} piezas</b><span>del foso salen del inventario de obra, más {N_SIL} silletas</span></div>
+  <div><b>{n2(INV_ML)} m</b><span>de varilla de 1/2" del inventario que se usan</span></div>
+  <div><b>{VAR['#4'] - VAR_INV['#4']} varillas</b><span>#4 de 6 m que se dejan de comprar (de {VAR['#4']} a {VAR_INV['#4']})</span></div>
+  <div><b>0</b><span>Varilla #3 en inventario: los flejes se compran completos</span></div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:8px">
+<table>{INV_HEAD}<tbody>{inv_rows_html(INV_USO[:half])}</tbody></table>
+<table>{INV_HEAD}<tbody>{inv_rows_html(INV_USO[half:])}</tbody></table>
+</div>
+<ul class="notas">
+  <li>"Fila" es la fila de la hoja INVENTARIO DE OBRA, donde estas varillas están marcadas en naranja.</li>
+  <li>En los trozos con patas o ganchos se corta el doblez 5 cm más allá y se usa solo el tramo recto. Las varillas curvadas no se usan: no se deben enderezar.</li>
+  <li>No sirven del inventario: la varilla de 1/4", la de 5/8" (salvo aprobación del calculista) ni los flejes de 31.5 × 25 cm y 34 × 31 cm, porque la columna lleva fleje de 32 × 32 cm.</li>
+</ul>
+
+<h2 class="c2">4. Plan de corte de las varillas nuevas de 6.00 m</h2>
+<div class="res">
+  <div><b>{VAR_INV['#4']} varillas</b><span>#4 (1/2") de 6 m para lo que no sale del inventario</span></div>
+  <div><b>{VAR_INV['#3']} + 1 varillas</b><span>#3 (3/8") de 6 m, más 1 de reserva</span></div>
+  <div><b>{n2(ret_inv)} m</b><span>Retal total de #4 ({ret_inv/(VAR_INV['#4']*VARILLA)*100:.1f} % de lo comprado)</span></div>
+  <div><b>{VAR_INV['#4'] + VAR_INV['#3'] + 1} varillas</b><span>Total a pedir</span></div>
 </div>
 <table style="margin-top:8px">
 <thead><tr><th>Patrón</th><th>Barra</th><th class="r">Varillas</th><th>Cortes en cada varilla de 6.00 m (marca y longitud)</th>
 <th class="r">Retal c/u (m)</th><th class="r">Retal total (m)</th><th>Uso del retal</th></tr></thead>
-<tbody>{plan_rows}</tbody>
+<tbody>{plan_rows_html(PLAN_INV)}</tbody>
 </table>
 <ul class="notas">
-  <li>48 varillas #4 es el mínimo posible. Ninguna varilla admite 4 piezas (4 × 1.75 = 7.00 m), y las de 2.60 m solo admiten una pieza más. Con 47 varillas no caben las 124 piezas.</li>
-  <li>Las piezas de 1.75 m de M3 y M4 son iguales: en el patrón A van 20 de M4 y 8 de M3.</li>
+  <li>{VAR_INV['#4']} varillas #4 es el mínimo exacto para las piezas que faltan. Sin usar el inventario serían {VAR['#4']}.</li>
+  <li>Las silletas ya salen del inventario, así que los retales de 0.80 y 1.20 m quedan para estacas de formaleta y replanteo.</li>
   <li>Cortar primero las piezas largas de cada varilla y marcar cada pieza con su marca (L1, M2…) antes de figurar.</li>
-  <li>Silletas: varilla doblada en forma de puente de unos 0.75 m de desarrollo, que sostiene la parrilla superior a 0.15 m. Se necesitan unas 6 a 9 para la losa (una cada 0.60 a 0.80 m).</li>
-  <li>Los retales de 0.20 m y 0.05 m no tienen uso estructural: van como chatarra.</li>
-  <li>Se recomienda pedir 1 varilla #3 de reserva. La #4 ya tiene reserva en el patrón F (retal de 4.25 m).</li>
 </ul>
 """
 
@@ -210,7 +308,7 @@ HTML = f"""<!doctype html><html lang="es"><head><meta charset="utf-8">
 <style>
 @page {{ size: Letter landscape; margin: 12mm 12mm 14mm; }}
 * {{ box-sizing: border-box; }}
-body {{ font: 9pt/1.35 Arial, Helvetica, sans-serif; color: #1a1a1a; margin: 0; }}
+body {{ font: 9pt/1.35 Arial, Helvetica, sans-serif; color: #1a1a1a; margin: 0; padding: 0 2px; }}
 h1 {{ font-size: 15pt; margin: 0 0 2px; letter-spacing: .3px; }}
 h2 {{ font-size: 11pt; margin: 10px 0 5px; padding-bottom: 3px; border-bottom: 1.5px solid #1a1a1a; text-transform: uppercase; letter-spacing: .4px; }}
 .head {{ display: flex; justify-content: space-between; gap: 16px; border-bottom: 2px solid #1a1a1a; padding-bottom: 8px; }}
@@ -230,7 +328,7 @@ col.el {{ width: 230px; }}
 svg.fig {{ width: 140px; height: auto; display: block; }}
 svg.fig path, svg.fig polyline, svg.fig rect {{ fill: none; stroke: #b3261e; stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }}
 svg.fig text {{ font: 9px Arial, sans-serif; fill: #333; text-anchor: middle; }}
-svg.bar6 {{ width: 340px; height: auto; display: block; }}
+svg.bar6 {{ width: 280px; height: auto; display: block; }}
 svg.bar6 .pz {{ fill: #fbe3df; stroke: #b3261e; stroke-width: 1; }}
 svg.bar6 .rt {{ fill: #e6e6e6; stroke: #999; stroke-width: 1; stroke-dasharray: 3 2; }}
 svg.bar6 text {{ font: 8.5px Arial, sans-serif; fill: #1a1a1a; text-anchor: middle; }}
@@ -350,50 +448,174 @@ for i, (n, v, u, src) in enumerate(PAR, 5):
     cell(P, f"C{i}", u); cell(P, f"D{i}", src)
 DA, DC = "Parámetros!$B$5", "Parámetros!$B$6"
 
-# Cartilla
-C = wb.create_sheet("Cartilla acero")
-C["A1"] = "CARTILLA DE DESPIECE — ACERO DE REFUERZO FOSO DE ASCENSOR (EST-02)"; C["A1"].font = TIT
-C["A2"] = "Valores en azul tomados del plano EST-02 (confirmados en obra). N° de barras = REDONDEAR.MAS(distribución ÷ separación) + 1."
-C["A2"].font = Font(name=F, size=9, italic=True)
-header(C, 4, ["Marca", "Elemento", "Forma", "Tramos (m)", "Barra", "Separación (m)", "Long. a distribuir (m)",
-              "N° por elemento", "Elementos", "Cant. total", "L corte (m)", "Long. total (ml)"],
-       [7, 36, 30, 18, 7, 11, 12, 10, 10, 10, 10, 14])
-r0 = 5
-for i, (m, el, bar, sep, dist, nfix, mult, L, forma, tramos, _) in enumerate(CARTILLA):
-    r = r0 + i
-    cell(C, f"A{r}", m, BOLD, al=CE); cell(C, f"B{r}", el); cell(C, f"C{r}", forma); cell(C, f"D{r}", tramos)
-    cell(C, f"E{r}", bar, al=CE)
-    cell(C, f"F{r}", sep, BLUE, "0.000"); cell(C, f"G{r}", dist, BLUE, "0.00")
-    cell(C, f"H{r}", nfix if nfix is not None else f"=ROUNDUP(ROUND(G{r}/F{r},6),0)+1",
-         BLUE if nfix is not None else BLK, "0")
-    cell(C, f"I{r}", mult, BLUE, "0")
-    cell(C, f"J{r}", f"=H{r}*I{r}", BOLD, "0")
-    cell(C, f"K{r}", L, BLUE, "0.00")
-    cell(C, f"L{r}", f"=J{r}*K{r}", BOLD, "#,##0.00")
-r1 = r0 + len(CARTILLA) - 1
-r = r1 + 1
-TOTS = {}
-for lbl, frm, key in [
-    ("Barra #4 (1/2\") — neto", f'=SUMIF(E{r0}:E{r1},"#4",L{r0}:L{r1})', "l4"),
-    ("Barra #4 (1/2\") — con desperdicio", None, "l4b"),
-    ("Barra #3 (3/8\") — neto", f'=SUMIF(E{r0}:E{r1},"#3",L{r0}:L{r1})', "l3"),
-    ("Barra #3 (3/8\") — con desperdicio", None, "l3b"),
-    ("Total #4 + #3 — neto", None, "neto"),
-    ("Total #4 + #3 — con desperdicio", None, "bruto"),
-]:
-    if key == "l4b":
-        frm = f"=L{TOTS['l4']}*(1+{DA})"
-    elif key == "l3b":
-        frm = f"=L{TOTS['l3']}*(1+{DA})"
-    elif key == "neto":
-        frm = f"=L{TOTS['l4']}+L{TOTS['l3']}"
-    elif key == "bruto":
-        frm = f"=L{TOTS['l4b']}+L{TOTS['l3b']}"
-    cell(C, f"A{r}", lbl, BOLD, fill=TOT); C.merge_cells(f"A{r}:K{r}")
-    cell(C, f"L{r}", frm, BOLD, "#,##0.00", TOT)
-    TOTS[key] = r
+# Acero: todas las tablas de varillas en una sola hoja, con el formato de "CÁLCULO DE CANTIDADES DE OBRA"
+A = wb.create_sheet("ACERO")
+CAL = "Calibri"
+def bs(l="dotted", r="dotted", t="dotted", b="dotted"):
+    return Border(left=Side(style=l), right=Side(style=r), top=Side(style=t), bottom=Side(style=b))
+G_TIT = PatternFill("solid", fgColor="FF6AA84F")
+G_SUB = PatternFill("solid", fgColor="FFB6D7A8")
+G_TOT = PatternFill("solid", fgColor="FF00FF00")
+ORG = PatternFill("solid", fgColor="FFFFC000")
+for col, w in zip("ABCDEFGHIJ", [4, 4, 52, 24, 14, 26, 13, 9, 9, 9]):
+    A.column_dimensions[col].width = w
+A.sheet_view.showGridLines = True
+
+
+def a(ref, v, bold=False, fmt=None, fill=None, border=None, al=None, color=None):
+    c = A[ref]
+    c.value = v
+    c.font = Font(name=CAL, size=11, bold=bold, color=color)
+    if fmt: c.number_format = fmt
+    if fill: c.fill = fill
+    c.border = border or bs()
+    c.alignment = al or Alignment(vertical="center", wrap_text=True)
+    return c
+
+
+def titulo(r, txt):
+    a(f"C{r}", txt, True, fill=G_TIT, border=bs("thick", "thick", "thick", "double"),
+      al=Alignment(horizontal="center", vertical="center"))
+    for col in "DEFGHIJ":
+        a(f"{col}{r}", None, fill=G_TIT, border=bs("thin", "thick" if col == "J" else "thin", "thick", "double"))
+    A.merge_cells(f"C{r}:J{r}")
+
+
+def encabezado(r, labels):
+    for col, l in zip("CDEFGH", labels):
+        a(f"{col}{r}", l, True, border=bs("thick" if col == "C" else "thin", "thin", "medium", "medium"),
+          al=Alignment(horizontal="center", vertical="center", wrap_text=True))
+    for col in "IJ":
+        a(f"{col}{r}", None, border=bs("thin", "thick" if col == "J" else "thin", "medium", "medium"))
+    A.merge_cells(f"H{r}:J{r}")
+
+
+def fila(r, vals, fmts, fill=None, bold=False, borde=("dotted", "dotted"), inputs=()):
+    for k, (col, v) in enumerate(zip("CDEFGH", vals)):
+        a(f"{col}{r}", v, bold, fmts[k] if k < len(fmts) else None, fill,
+          bs("thick" if col == "C" else "dotted", "dotted", *borde),
+          Alignment(horizontal="left" if col == "C" else "center", vertical="center", wrap_text=True),
+          color="0000FF" if col in inputs else None)
+    for col in "IJ":
+        a(f"{col}{r}", None, fill=fill, border=bs("dotted", "thick" if col == "J" else "dotted", *borde))
+    A.merge_cells(f"H{r}:J{r}")
+
+
+def total(r, txt, frm, fmt="0.00", fill=G_SUB, extra=None):
+    a(f"C{r}", txt, True, fill=fill, border=bs("thick", "thin", "double", "thin" if fill is G_SUB else "thick"))
+    for col in "DEFG":
+        v = extra.get(col) if extra else None
+        a(f"{col}{r}", v, True, fill=fill, border=bs("thin", "thin", "double", "thin" if fill is G_SUB else "thick"),
+          fmt=fmt, al=Alignment(horizontal="center"))
+    a(f"H{r}", frm, True, fmt, fill, bs("thin", "thin", "double", "thin" if fill is G_SUB else "thick"),
+      Alignment(horizontal="center"))
+    for col in "IJ":
+        a(f"{col}{r}", None, fill=fill, border=bs("thin", "thick" if col == "J" else "thin", "double",
+                                                     "thin" if fill is G_SUB else "thick"))
+    A.merge_cells(f"H{r}:J{r}")
+
+
+a("C2", "FOSO DE ASCENSOR — CANTIDADES DE ACERO DE REFUERZO (PLANO EST-02)", True, border=Border(),
+  al=Alignment(vertical="center"))
+A["C2"].font = Font(name=CAL, size=14, bold=True)
+a("C3", "Multifamiliar Herrera · Acero fy 420 MPa · Varilla comercial de 6.00 m · Valores en azul: datos del plano", border=Border())
+A["C3"].font = Font(name=CAL, size=10, italic=True)
+
+r = 5
+REFS = {}
+for barra, nombre in (("#4", 'ML DE ACERO #4 (1/2") — CARTILLA'), ("#3", 'ML DE ACERO #3 (3/8") — CARTILLA')):
+    titulo(r, nombre); r += 1
+    encabezado(r, ["ELEMENTO", "FORMA (TRAMOS m)", "SEPARACIÓN (m)", "CANTIDAD", "L CORTE (m)", "ML"]); r += 1
+    r0 = r
+    for m, el, bar, sep, dist, nfix, mult, L, forma, tramos, _ in CARTILLA:
+        if bar != barra: continue
+        cant = f"=(ROUNDUP({dist}/{sep},0)+1)*{mult}" if nfix is None else f"={nfix}*{mult}"
+        fila(r, [f"{m} — {el}", tramos, sep if sep else "—", cant, L, f"=F{r}*G{r}"],
+             [None, None, "0.000", "0", "0.00", "0.00"], inputs="EG")
+        r += 1
+    total(r, "TOTAL", f"=SUM(H{r0}:H{r-1})", extra={"F": f"=SUM(F{r0}:F{r-1})"})
+    A[f"F{r}"].number_format = "0"
+    REFS[barra] = f"H{r}"
+    r += 3
+
+titulo(r, "RESUMEN DE METROS LINEALES DE ACERO"); r += 1
+fila(r, ['Acero #4 (1/2")', None, None, None, None, f"={REFS['#4']}"], [None]*5 + ["0.00"]); r += 1
+fila(r, ['Acero #3 (3/8")', None, None, None, None, f"={REFS['#3']}"], [None]*5 + ["0.00"]); r += 1
+total(r, "SUB TOTAL DE ML DE ACERO", f"=H{r-2}+H{r-1}"); sub = r; r += 1
+fila(r, ["DESPERDICIO", None, None, None, f"={DA}", f"=H{sub}*G{r}"], [None, None, None, None, "0%", "0.00"]); des = r; r += 1
+total(r, "TOTAL DE ML DE ACERO CON DESPERDICIO", f"=H{sub}+H{des}", fill=G_TOT)
+REFS["bruto"] = f"H{r}"
+r += 3
+
+titulo(r, 'VARILLAS DEL INVENTARIO DE 1/2" QUE SE USAN (MARCADAS EN NARANJA EN EL INVENTARIO)'); r += 1
+encabezado(r, ["FILA EN INVENTARIO · DETALLE", "LONGITUD (m)", "USO", "L A CORTAR (m)", "SOBRANTE (m)", "ML A UTILIZAR"]); r += 1
+i0 = r
+for fila_inv, L, d, uso, Lc in INV_USO:
+    fila(r, [f"Fila {fila_inv} · {d}", L, uso, Lc, f"=D{r}-F{r}", f"=F{r}"],
+         [None, "0.000", None, "0.00", "0.00", "0.00"], fill=ORG, inputs="DF")
     r += 1
-C.freeze_panes = "C5"
+i1 = r - 1
+total(r, "TOTAL A UTILIZAR DEL INVENTARIO", f"=SUM(H{i0}:H{i1})")
+r += 3
+
+titulo(r, "PIEZAS #4: CUÁNTAS SALEN DEL INVENTARIO Y CUÁNTAS HAY QUE CORTAR DE VARILLA NUEVA"); r += 1
+encabezado(r, ["PIEZA", "L CORTE (m)", "REQUERIDAS", "DEL INVENTARIO", "FALTAN", "ML FALTANTES"]); r += 1
+p0 = r
+DEM4 = {}
+for m, el, bar, sep, dist, nfix, mult, L, *_ in CARTILLA:
+    if bar == "#4":
+        k = "M3/M4" if m in ("M3", "M4") else m
+        DEM4.setdefault(k, [L, 0, el])
+        DEM4[k][1] += nbarras(sep, dist, nfix) * mult
+for k, (L, n, el) in DEM4.items():
+    nombre = "M3/M4 — Muros, verticales" if k == "M3/M4" else f"{k} — {el}"
+    fila(r, [nombre, L, n, f'=COUNTIF($E${i0}:$E${i1},"{k}")', f"=E{r}-F{r}", f"=G{r}*D{r}"],
+         [None, "0.00", "0", "0", "0", "0.00"])
+    r += 1
+fila(r, ["Silletas para la parrilla superior de la losa", 0.75, N_SIL, f'=COUNTIF($E${i0}:$E${i1},"Silleta")',
+         f"=E{r}-F{r}", f"=G{r}*D{r}"], [None, "0.00", "0", "0", "0", "0.00"])
+r += 1
+total(r, "TOTAL", f"=SUM(H{p0}:H{r-1})",
+      extra={"E": f"=SUM(E{p0}:E{r-1})", "F": f"=SUM(F{p0}:F{r-1})", "G": f"=SUM(G{p0}:G{r-1})"})
+for col in "EFG": A[f"{col}{r}"].number_format = "0"
+r += 3
+
+
+def bloque_plan(r, txt, plan, barra):
+    titulo(r, txt); r += 1
+    encabezado(r, ["PATRÓN (PIEZAS EN CADA VARILLA DE 6.00 m)", "USADO (m)", "RETAL C/U (m)", "USO DEL RETAL",
+                   "RETAL TOTAL (m)", "VARILLAS"]); r += 1
+    q0 = r
+    for pat, bar, nv, pcs, uso in plan:
+        if bar != barra: continue
+        txt_p = f"{pat}: " + " + ".join(f"{mm} {LL:.2f}" for mm, LL in pcs)
+        fila(r, [txt_p, "=" + "+".join(f"{LL:.2f}" for _, LL in pcs), f"={VARILLA:.2f}-D{r}", uso, f"=E{r}*H{r}", nv],
+             [None, "0.00", "0.00", None, "0.00", "0"], inputs="H")
+        r += 1
+    total(r, "TOTAL VARILLAS", f"=SUM(H{q0}:H{r-1})", extra={"G": f"=SUM(G{q0}:G{r-1})"})
+    A[f"H{r}"].number_format = "0"
+    return r
+
+
+r = bloque_plan(r, "PLAN DE CORTE — VARILLAS NUEVAS #4 DE 6.00 m (USANDO EL INVENTARIO)", PLAN_INV, "#4")
+REFS["v4"] = f"H{r}"; r += 3
+r = bloque_plan(r, "PLAN DE CORTE — VARILLAS NUEVAS #3 DE 6.00 m", PLAN_INV, "#3")
+REFS["v3"] = f"H{r}"; r += 3
+
+titulo(r, "RESUMEN DE COMPRA DE VARILLAS DE 6.00 m"); r += 1
+fila(r, ['Varilla #4 (1/2")', None, None, None, None, f"={REFS['v4']}"], [None]*5 + ["0"]); c4 = r; r += 1
+fila(r, ['Varilla #3 (3/8")', None, None, None, None, f"={REFS['v3']}"], [None]*5 + ["0"]); r += 1
+fila(r, ['Reserva varilla #3 (3/8")', None, None, None, None, 1], [None]*5 + ["0"], inputs="H"); r += 1
+total(r, "TOTAL VARILLAS A COMPRAR", f"=SUM(H{c4}:H{r-1})", fmt="0", fill=G_TOT)
+REFS["compra"] = f"H{r}"
+r += 3
+
+r = bloque_plan(r, "REFERENCIA — PLAN DE CORTE SIN USAR EL INVENTARIO (VARILLAS #4)", PLAN, "#4")
+r += 2
+for n_ in ["Las patas y ganchos se figuran después de cortar cada pieza a su L de corte.",
+           "En los trozos del inventario con dobleces se corta el doblez 5 cm más allá y se usa solo el tramo recto.",
+           "Las varillas curvadas del inventario no se usan: no se deben enderezar."]:
+    A[f"C{r}"] = "• " + n_; A[f"C{r}"].font = Font(name=CAL, size=10); r += 1
 
 # Concreto
 K = wb.create_sheet("Concreto por elementos")
@@ -435,51 +657,19 @@ R = wb.create_sheet("Resumen", 0)
 R["A1"] = "FOSO DE ASCENSOR — RESUMEN DE ACERO Y CONCRETO"; R["A1"].font = TIT
 R["A2"] = "Multifamiliar Herrera · Plano EST-02 v.01 (19/06/2026). Valores enlazados a las otras hojas."
 R["A2"].font = Font(name=F, size=9, italic=True)
-header(R, 4, ["Concepto", "Neto", "Con desperdicio", "Und"], [44, 14, 16, 8])
+header(R, 4, ["Concepto", "Neto", "Con desperdicio / total", "Und"], [50, 14, 18, 8])
 GRN = Font(name=F, size=10, color="008000")
-RES = [("Acero #4 (1/2\")", f"='Cartilla acero'!L{TOTS['l4']}", f"=B5*(1+{DA})", "ml"),
-       ("Acero #3 (3/8\")", f"='Cartilla acero'!L{TOTS['l3']}", f"=B6*(1+{DA})", "ml"),
+RES = [("Acero #4 (1/2\")", f"=ACERO!{REFS['#4']}", f"=B5*(1+{DA})", "ml"),
+       ("Acero #3 (3/8\")", f"=ACERO!{REFS['#3']}", f"=B6*(1+{DA})", "ml"),
        ("Acero total", "=B5+B6", "=C5+C6", "ml"),
-       ("Concreto estructural 21 MPa", f"='Concreto por elementos'!H{KT}", f"='Concreto por elementos'!I{KT}", "m³")]
-for i, (n, a, b, u) in enumerate(RES, 5):
+       ("Concreto estructural 21 MPa", f"='Concreto por elementos'!H{KT}", f"='Concreto por elementos'!I{KT}", "m³"),
+       ("Varillas #4 de 6 m a comprar (usando inventario)", None, f"=ACERO!{REFS['v4']}", "und"),
+       ("Varillas #3 de 6 m a comprar (incluye 1 de reserva)", None, f"=ACERO!{REFS['v3']}+1", "und")]
+for i, (n, a_, b, u) in enumerate(RES, 5):
     cell(R, f"A{i}", n, BOLD if "total" in n.lower() else BLK)
-    cell(R, f"B{i}", a, GRN, "#,##0.00" if u == "ml" else "0.000")
-    cell(R, f"C{i}", b, BOLD, "#,##0.00" if u == "ml" else "0.000")
+    cell(R, f"B{i}", a_, GRN, "#,##0.00" if u == "ml" else "0.000")
+    cell(R, f"C{i}", b, BOLD, "#,##0.00" if u == "ml" else ("0" if u == "und" else "0.000"))
     cell(R, f"D{i}", u, al=CE)
-
-# Plan de corte
-PC = wb.create_sheet("Plan de corte")
-PC["A1"] = "PLAN DE CORTE EN VARILLAS COMERCIALES DE 6.00 m"; PC["A1"].font = TIT
-PC["A2"] = "Cada fila es un patrón: cuántas varillas se cortan igual y qué piezas salen de cada una. 48 varillas #4 es el mínimo posible."
-PC["A2"].font = Font(name=F, size=9, italic=True)
-header(PC, 4, ["Patrón", "Barra", "Varillas", "Pieza 1", "L1 (m)", "Pieza 2", "L2 (m)", "Pieza 3", "L3 (m)", "Pieza 4", "L4 (m)",
-               "Usado por varilla (m)", "Retal c/u (m)", "Retal total (m)", "Uso del retal"],
-       [8, 7, 9, 9, 8, 9, 8, 9, 8, 9, 8, 12, 11, 12, 52])
-PC["Q3"] = "Longitud varilla (m)"; PC["Q3"].font = BOLD
-cell(PC, "R3", VARILLA, BLUE, "0.00", YEL)
-q0 = 5
-for i, (pat, bar, nv, pcs, uso) in enumerate(PLAN):
-    r = q0 + i
-    cell(PC, f"A{r}", pat, BOLD, al=CE); cell(PC, f"B{r}", bar, al=CE); cell(PC, f"C{r}", nv, BLUE, "0")
-    for j in range(4):
-        cm, cl = get_column_letter(4 + 2 * j), get_column_letter(5 + 2 * j)
-        if j < len(pcs):
-            cell(PC, f"{cm}{r}", pcs[j][0], al=CE); cell(PC, f"{cl}{r}", pcs[j][1], BLUE, "0.00")
-        else:
-            cell(PC, f"{cm}{r}", None); cell(PC, f"{cl}{r}", None)
-    cell(PC, f"L{r}", f"=SUM(E{r},G{r},I{r},K{r})", fmt="0.00")
-    cell(PC, f"M{r}", f"=$R$3-L{r}", fmt="0.00")
-    cell(PC, f"N{r}", f"=C{r}*M{r}", fmt="0.00")
-    cell(PC, f"O{r}", uso)
-q1 = q0 + len(PLAN) - 1
-r = q1 + 1
-for bar in ("#4", "#3"):
-    cell(PC, f"A{r}", f"Total varillas {bar}", BOLD, fill=TOT); PC.merge_cells(f"A{r}:B{r}")
-    cell(PC, f"C{r}", f'=SUMIF(B{q0}:B{q1},"{bar}",C{q0}:C{q1})', BOLD, "0", TOT)
-    cell(PC, f"D{r}", "Retal total", BOLD, fill=TOT); PC.merge_cells(f"D{r}:M{r}")
-    cell(PC, f"N{r}", f'=SUMIF(B{q0}:B{q1},"{bar}",N{q0}:N{q1})', BOLD, "0.00", TOT)
-    cell(PC, f"O{r}", f'=TEXT(C{r}*$R$3,"0.00")&" ml comprados"', fill=TOT)
-    r += 1
 
 for ws in wb.worksheets:
     ws.sheet_view.showGridLines = False
@@ -488,4 +678,4 @@ for ws in wb.worksheets:
     ws.page_setup.fitToHeight = 0
     ws.sheet_properties.pageSetUpPr.fitToPage = True
 wb.save(XLSX_OUT)
-print(f"varillas {VAR} | #4 {l4:.2f} ml | #3 {l3:.2f} ml | neto {l4+l3:.2f} | bruto {(l4+l3)*1.05:.2f} | conc {vtot:.3f} / {vtot*1.05:.3f}")
+print(f"varillas {VAR} / con inventario {VAR_INV} | #4 {l4:.2f} ml | #3 {l3:.2f} ml | neto {l4+l3:.2f} | bruto {(l4+l3)*1.05:.2f} | conc {vtot:.3f} / {vtot*1.05:.3f}")
