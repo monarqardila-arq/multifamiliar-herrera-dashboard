@@ -140,12 +140,13 @@ sol_v = sol[1] * sol[2] * sol[3] * sol[4]
 VARILLA = 6.00
 # Patrón, barra, n° de varillas, piezas [(marca, L)], uso sugerido del retal
 PLAN = [
-    ("A", "#4", 14, [("M2", 2.50), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Sin retal"),
+    ("A", "#4", 9, [("M2", 2.50), ("M4", 1.75), ("M4", 1.75)], "Sin retal"),
+    ("A2", "#4", 5, [("M2", 2.50), ("M3", 1.75), ("M3", 1.75)], "Sin retal"),
     ("B", "#4", 15, [("L2", 2.60), ("L1", 2.20)], "Burritos para la parrilla superior (1 por retal)"),
     ("C", "#4", 7, [("M1", 2.10), ("M1", 2.10), ("C1", 1.80)], "Sin retal"),
     ("D", "#4", 4, [("L1", 2.20), ("C1", 1.80), ("C1", 1.80)], "Chatarra"),
-    ("E", "#4", 3, [("L2", 2.60), ("M3/M4", 1.75)], "Estacas de formaleta y replanteo"),
-    ("F", "#4", 1, [("L1", 2.20), ("C1", 1.80), ("M3/M4", 1.75)], "Chatarra"),
+    ("E", "#4", 3, [("L2", 2.60), ("M3", 1.75)], "Estacas de formaleta y replanteo"),
+    ("F", "#4", 1, [("L1", 2.20), ("C1", 1.80), ("M3", 1.75)], "Chatarra"),
     ("G", "#4", 1, [("L1", 2.20), ("L1", 2.20)], "Reserva para reponer una pieza"),
     ("H", "#3", 16, [("E1", 1.50)] * 4, "Sin retal"),
 ]
@@ -164,16 +165,16 @@ VAR = {b: sum(nv for _, bb, nv, _, _ in PLAN if bb == b) for b in ("#4", "#3")}
 # Fila en la hoja "INVENTARIO DE OBRA", longitud en inventario (m), detalle, uso en el foso, longitud a cortar (m)
 INV_USO = [
     (30, 1.05, 'Con gancho de 0.20 m', 'Burrito', 0.75),
-    (31, 1.765, '—', 'M3/M4', 1.75),
-    (32, 1.765, '—', 'M3/M4', 1.75),
+    (31, 1.765, '—', 'M3', 1.75),
+    (32, 1.765, '—', 'M3', 1.75),
     (35, 1.047, 'Con gancho de 0.20 m', 'Burrito', 0.75),
     (36, 1.062, 'Con gancho de 0.195 m', 'Burrito', 0.75),
     (39, 1.06, 'Con gancho de 0.195 m', 'Burrito', 0.75),
     (40, 0.777, '—', 'Burrito', 0.75),
     (41, 0.767, '—', 'Burrito', 0.75),
     (45, 3.55, 'Con patas de 0.20 m a cada lado', 'L2', 2.60),
-    (49, 2.29, 'Con ganchos a 180° de 20.4 cm', 'M3/M4', 1.75),
-    (50, 2.265, 'Con ganchos a 160° de 20.2 cm', 'M3/M4', 1.75),
+    (49, 2.29, 'Con ganchos a 180° de 20.4 cm', 'M3', 1.75),
+    (50, 2.265, 'Con ganchos a 160° de 20.2 cm', 'M3', 1.75),
     (54, 2.04, '—', 'C1', 1.80),
     (55, 2.705, '—', 'L2', 2.60),
     (56, 2.352, 'Con pata de 20 cm a un lado', 'M1', 2.10),
@@ -206,15 +207,16 @@ INV_USO = [
 ]
 # Varillas nuevas de 6 m para lo que no sale del inventario (mínimo exacto: 31 #4)
 PLAN_INV = [
-    ("A", "#4", 11, [("M2", 2.50), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Sin retal"),
+    ("A", "#4", 9, [("M2", 2.50), ("M4", 1.75), ("M4", 1.75)], "Sin retal"),
+    ("A2", "#4", 2, [("M2", 2.50), ("M3", 1.75), ("M3", 1.75)], "Sin retal"),
     ("B", "#4", 6, [("M1", 2.10), ("M1", 2.10), ("C1", 1.80)], "Sin retal"),
     ("C", "#4", 4, [("L2", 2.60), ("L2", 2.60)], "Estacas de formaleta"),
     ("D", "#4", 3, [("L2", 2.60), ("L1", 2.20)], "Estacas de formaleta y replanteo"),
-    ("E", "#4", 2, [("L1", 2.20), ("M3/M4", 1.75), ("M3/M4", 1.75)], "Chatarra"),
+    ("E", "#4", 2, [("L1", 2.20), ("M3", 1.75), ("M3", 1.75)], "Chatarra"),
     ("F", "#4", 2, [("L1", 2.20), ("C1", 1.80), ("C1", 1.80)], "Chatarra"),
-    ("G", "#4", 1, [("L2", 2.60), ("M3/M4", 1.75)], "Reserva para reponer una pieza"),
+    ("G", "#4", 1, [("L2", 2.60), ("M3", 1.75)], "Reserva para reponer una pieza"),
     ("H", "#4", 1, [("L2", 2.60), ("M1", 2.10)], "Estacas de formaleta"),
-    ("I", "#4", 1, [("L1", 2.20), ("C1", 1.80), ("M3/M4", 1.75)], "Chatarra"),
+    ("I", "#4", 1, [("L1", 2.20), ("C1", 1.80), ("M3", 1.75)], "Chatarra"),
     ("J", "#3", 16, [("E1", 1.50)] * 4, "Sin retal"),
 ]
 _got = {}
@@ -227,6 +229,22 @@ for pat, bar, nv, pcs, uso in PLAN_INV:
     for _, L in pcs:
         _got[(bar, L)] = _got.get((bar, L), 0) + nv
 assert _got == _need, (_got, _need)
+# Letras de patrón consecutivas (A, B, C…)
+PLAN = [(chr(65 + i),) + t[1:] for i, t in enumerate(PLAN)]
+PLAN_INV = [(chr(65 + i),) + t[1:] for i, t in enumerate(PLAN_INV)]
+_need_m = {}
+for m, el, bar, sep, dist, nfix, mult, L, *_ in CARTILLA:
+    _need_m[m] = nbarras(sep, dist, nfix) * mult
+for plan_ in (PLAN, PLAN_INV):
+    _got_m = {}
+    if plan_ is PLAN_INV:
+        for _, L, _, uso, Lc in INV_USO:
+            if uso != "Burrito":
+                _got_m[uso] = _got_m.get(uso, 0) + 1
+    for pat, bar, nv, pcs, uso in plan_:
+        for mm, _ in pcs:
+            _got_m[mm] = _got_m.get(mm, 0) + nv
+    assert _got_m == _need_m, (_got_m, _need_m)
 VAR_INV = {b: sum(nv for _, bb, nv, _, _ in PLAN_INV if bb == b) for b in ("#4", "#3")}
 N_SIL = sum(1 for x in INV_USO if x[3] == "Burrito")
 INV_PZ = [x for x in INV_USO if x[3] != "Burrito"]
@@ -257,9 +275,22 @@ def plan_rows_html(plan):
         for pat, bar, nv, pcs, uso in plan)
 
 
+USO_TXT = {
+    "L1": "L1 · Losa, sentido X",
+    "L2": "L2 · Losa, sentido Y",
+    "M1": "M1 · Muro lado X (1.30 m), horizontal",
+    "M2": "M2 · Muro lado Y (1.70 m), horizontal",
+    "M3": "M3 · Muro lado X (1.30 m), vertical",
+    "M4": "M4 · Muro lado Y (1.70 m), vertical",
+    "C1": "C1 · Columna, longitudinal",
+    "E1": "E1 · Columna, fleje",
+    "Burrito": "Burrito · Losa, parrilla superior",
+}
+
+
 def inv_rows_html(items):
     return "".join(
-        f'<tr><td class="c">{fila}</td><td class="r">{L:.3f}</td><td>{d}</td><td class="c b">{uso}</td><td class="r b">{Lc:.2f}</td></tr>'
+        f'<tr><td class="c">{fila}</td><td class="r">{L:.3f}</td><td>{d}</td><td class="b">{USO_TXT[uso]}</td><td class="r b">{Lc:.2f}</td></tr>'
         for fila, L, d, uso, Lc in items)
 
 
@@ -553,7 +584,7 @@ titulo(r, 'VARILLAS DEL INVENTARIO DE 1/2" QUE SE USAN (MARCADAS EN NARANJA EN E
 encabezado(r, ["FILA EN INVENTARIO · DETALLE", "LONGITUD (m)", "USO", "L A CORTAR (m)", "SOBRANTE (m)", "ML A UTILIZAR"]); r += 1
 i0 = r
 for fila_inv, L, d, uso, Lc in INV_USO:
-    fila(r, [f"Fila {fila_inv} · {d}", L, uso, Lc, f"=D{r}-F{r}", f"=F{r}"],
+    fila(r, [f"Fila {fila_inv} · {d}", L, USO_TXT[uso], Lc, f"=D{r}-F{r}", f"=F{r}"],
          [None, "0.000", None, "0.00", "0.00", "0.00"], fill=ORG, inputs="DF")
     r += 1
 i1 = r - 1
@@ -566,15 +597,15 @@ p0 = r
 DEM4 = {}
 for m, el, bar, sep, dist, nfix, mult, L, *_ in CARTILLA:
     if bar == "#4":
-        k = "M3/M4" if m in ("M3", "M4") else m
+        k = m
         DEM4.setdefault(k, [L, 0, el])
         DEM4[k][1] += nbarras(sep, dist, nfix) * mult
 for k, (L, n, el) in DEM4.items():
-    nombre = "M3/M4 — Muros, verticales" if k == "M3/M4" else f"{k} — {el}"
-    fila(r, [nombre, L, n, f'=COUNTIF($E${i0}:$E${i1},"{k}")', f"=E{r}-F{r}", f"=G{r}*D{r}"],
+    nombre = USO_TXT[k]
+    fila(r, [nombre, L, n, f'=COUNTIF($E${i0}:$E${i1},"{k} ·*")', f"=E{r}-F{r}", f"=G{r}*D{r}"],
          [None, "0.00", "0", "0", "0", "0.00"])
     r += 1
-fila(r, ["Burritos para la parrilla superior de la losa", 0.75, N_SIL, f'=COUNTIF($E${i0}:$E${i1},"Burrito")',
+fila(r, ["Burritos para la parrilla superior de la losa", 0.75, N_SIL, f'=COUNTIF($E${i0}:$E${i1},"Burrito ·*")',
          f"=E{r}-F{r}", f"=G{r}*D{r}"], [None, "0.00", "0", "0", "0", "0.00"])
 r += 1
 total(r, "TOTAL", f"=SUM(H{p0}:H{r-1})",
