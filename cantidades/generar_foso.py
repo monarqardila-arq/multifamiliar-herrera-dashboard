@@ -126,7 +126,7 @@ cart_rows = "".join(
     for r in rows)
 
 conc_rows = "".join(
-    f'<tr><td>{x["el"]}<div class="sub">{x["nota"]}</div></td><td class="r">{x["c"]}</td>'
+    f'<tr><td>{x["el"]}</td><td class="r">{x["c"]}</td>'
     f'<td class="r">{x["a"]:.2f}</td><td class="r">{x["b"]:.2f}</td><td class="r">{x["h"]:.2f}</td>'
     f'<td class="r">{n3(x["vu"])}</td><td class="r">{"—" if not x["desc"] else n3(x["desc"])}</td>'
     f'<td class="r b">{n3(x["vt"])}</td><td class="r">{n3(x["vt"]*(1+DESP_CONC))}</td></tr>'
@@ -343,20 +343,7 @@ h2.c2 {{ break-before: page; }}
 .geo {{ font-size: 8.5pt; margin: 2px 0 8px; }}
 .avoid {{ break-inside: avoid; }}
 </style></head><body>
-<div class="head">
-  <div>
-    <h1>FOSO DE ASCENSOR — CARTILLA DE ACERO Y CONCRETO</h1>
-    <p class="lead">Multifamiliar Herrera · Puerto Berrío, Antioquia</p>
-  </div>
-  <div class="meta">Base: plano estructural EST-02 · v.01 · 19/06/2026<br>Concreto f'c = 21 MPa · Acero fy = 420 MPa (NTC 2289)<br>Cotas y longitudes en metros</div>
-</div>
-
-<div class="res avoid">
-  <div><b>{n2(l4*(1+DESP_ACERO))} ml</b><span>Barra #4 (1/2"), con 5 % de desperdicio</span></div>
-  <div><b>{n2(l3*(1+DESP_ACERO))} ml</b><span>Barra #3 (3/8"), con 5 % de desperdicio</span></div>
-  <div><b>{n2((l4+l3)*(1+DESP_ACERO))} ml</b><span>Acero total, con 5 % de desperdicio</span></div>
-  <div><b>{n3(vtot*(1+DESP_CONC))} m³</b><span>Concreto 21 MPa, con 5 % de desperdicio</span></div>
-</div>
+<h1>FOSO DE ASCENSOR — CARTILLA DE ACERO Y CONCRETO</h1>
 
 <h2>1. Cartilla de despiece del acero de refuerzo</h2>
 <table>
@@ -369,16 +356,8 @@ h2.c2 {{ break-before: page; }}
 <tr class="tot"><td colspan="8">Total #4 + #3 — neto / con 5 % de desperdicio</td><td class="r">{n2(l4+l3)} / {n2((l4+l3)*(1+DESP_ACERO))}</td></tr>
 </tbody>
 </table>
-<ul class="notas">
-  <li>N° de barras = longitud a distribuir ÷ separación, redondeado hacia arriba, sin barra adicional en los extremos (revisión de obra). Losa X: 2.08 m → 11; losa Y: 1.68 m → 9; verticales muro X: 1.30 m → 7; muro Y: 1.70 m → 9; flejes: 1.20 m sobre la losa → 16. Las horizontales de muro son 7 filas en 1.20 m (arriba y abajo).</li>
-  <li>L corte es la longitud indicada en el plano. Es mayor que la suma de los tramos porque incluye el doblez de los ganchos.</li>
-  <li>Las patas de los verticales de muro (0.20 m) entran a la losa entre las dos capas. La pata inferior de las columnas va hacia afuera.</li>
-  <li>Recubrimientos según EST-02: 0.05 m en la losa, 0.062 y 0.075 m en los muros.</li>
-</ul>
 
-<div class="avoid">
-<h2 class="c2">2. Cálculo de concreto por elementos</h2>
-<p class="geo">Foso: luz libre de 1.50 × 1.90 m, profundidad útil de 1.20 m (N-0.10 a N-1.30). Exterior de muros: 1.80 × 2.20 m. Con columnas: 2.10 × 2.50 m. Altura total: 1.40 m (N-0.10 a N-1.50).</p>
+<h2>2. Cálculo de concreto por elementos</h2>
 <table>
 <colgroup><col style="width:290px"></colgroup>
 <thead><tr><th>Elemento</th><th class="r">Cant.</th><th class="r">Largo (m)</th><th class="r">Ancho (m)</th><th class="r">Alto / esp. (m)</th>
@@ -389,12 +368,6 @@ h2.c2 {{ break-before: page; }}
 <td class="r">{n3(sol_v)}</td><td class="r">—</td><td class="r">{n3(sol_v)}</td><td class="r">{n3(sol_v*(1+DESP_CONC))}</td></tr>
 </tbody>
 </table>
-<ul class="notas">
-  <li>El solado no está dibujado en EST-02. Se recomienda bajo la losa en contacto con el suelo y se da aparte del concreto estructural.</li>
-  <li>El plano no indica f'c ni fy. Se asumieron 21 MPa y 420 MPa: confirmar con el calculista.</li>
-</ul>
-</div>
-{PLAN_HTML}
 </body></html>"""
 open(HTML_OUT, "w").write(HTML)
 
